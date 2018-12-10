@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Infovis</title>
+
+  <script src="lib/d3.js"></script>
+  <script src="js/createVis.js"></script>
+
+</head>
+
+<body>
+
+<script>
+
+  var dataFileNames = {
+    exampleData1: 'exampleData1',
+    exampleData2: '',
+    exampleData3: ''
+  };
+
+  // global data var
+  var data;
+
+  var fileName = dataFileNames.exampleData1;
+
+  d3.json("../data/" + fileName + ".json", function (jsonData) {
+
+    data = jsonData;
+
+    // call drawing functions
+    draw();
+  });
+
+  /**
+   * create the visualisation
+   */
+  function draw() {
+    console.log(data);
+  }
+
+</script>
+
+</body>
+</html>
