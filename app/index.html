@@ -14,35 +14,97 @@
 
 <body>
 
-<script>
+  <script>
+    // global data var
+    var data;
 
-  var dataFileNames = {
-    exampleData1: 'exampleData1',
-    exampleData2: '',
-    exampleData3: ''
-  };
+    var fileName = 'data/FAOSTAT_data.json';
 
-  // global data var
-  var data;
+    loadJSON(function (response) {
+      // Parse JSON string into object
+      data = JSON.parse(response);
 
-  var fileName = dataFileNames.exampleData1;
+      // call drawing functions
+      draw();
+    });
 
-  d3.json("../data/" + fileName + ".json", function (jsonData) {
+    /**
+     * load data
+     */
+    function loadJSON(callback) {
+      var xobj = new XMLHttpRequest();
+      xobj.overrideMimeType("application/json");
+      xobj.open('GET', fileName, true);
+      xobj.onreadystatechange = function () {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+          // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+          callback(xobj.responseText);
+        }
+      };
+      xobj.send(null);
+    }
 
-    data = jsonData;
+    /**
+     * make data hierarchical
+     */
+    function groupData(flatData, key, value) {
+      var result = [];
+      var hierarchy = {};
 
-    // call drawing functions
-    draw();
-  });
+      flatData.forEach(function (node) {
+        hierarchy[node[key]] = node;
+      });
 
-  /**
-   * create the visualisation
-   */
-  function draw() {
-    console.log(data);
-  }
+      Object.keys(hierarchy).forEach(function (root) {
+        var parent = {};
+        parent[key] = root;
+        parent[value] = [];
+        flatData.forEach(function (node) {
+          if (node[key] === root) {
+            parent[value].push(node);
+            delete node[key];
+          }
+        });
+        result.push(parent);
+      });
 
-</script>
+      return result;
+    } 
+
+    /**
+     * prepare hierarchical data structure
+     */
+    function prepareData() {
+     var groupContinent = groupData(data, 'Continent', 'Countries');
+      groupContinent.forEach(function (continent) {
+        var groupedCountries = groupData(continent.Countries, 'Area', 'Years');
+        continent.Countries = groupedCountries;
+        groupedCountries.forEach(function (country) {
+          var groupedYears = groupData(country.Years, 'Year', 'Properties');
+          country.Years = groupedYears;
+        });
+      });
+      return groupContinent;
+    }
+
+    /**
+     * create the visualisation
+     */
+    function draw() {
+      var preparedData = prepareData();
+
+      var greeting = '<pre>There are ' + preparedData.length + ' regions. ';
+      preparedData.forEach(function (region) {
+        greeting += region.Continent + ' has ' + region.Countries.length + ' countries. ';
+      });
+      greeting += '</pre>';
+      document.body.innerHTML = greeting;     
+
+      console.log(preparedData); 
+    }
+
+  </script>
 
 </body>
+
 </html>
