@@ -4,7 +4,7 @@ Example project for working with D3 and Node.
 
 ## Data Source
 
-The data has been discovered on [Our-World-In-Data](https://ourworldindata.org), specifically the [Hunger-And-Undernourishment](https://ourworldindata.org/hunger-and-undernourishment). report. The data source is from the [Food and Agriculture Organization of the United Nations (FAO)](http://www.fao.org/faostat/en/#data/FS).
+The data has been discovered on [Our-World-In-Data](https://ourworldindata.org), specifically the [Hunger-And-Undernourishment](https://ourworldindata.org/hunger-and-undernourishment) report. The data source is from the [Food and Agriculture Organization of the United Nations (FAO)](http://www.fao.org/faostat/en/#data/FS).
 
 The data has been prepared as follows:
 
@@ -43,10 +43,10 @@ Within the example project, a hierarchical data preparation has been implemented
       "Year": "2000",
       "Properties": [
         ​​​​{
-        ​​​​ "Area Code": "3"
-​​​​​​​​         ​​​​"Item": "Average protein supply (g/cap/day) (3-year average)"
-​​​​​​​​         ​​​​"Item Code": "21013"
-​​​​​​​​         ​​​​"Unit": "g/capita/day"
+        ​​​​ "Area Code": "3",
+​​​​​​​​         ​​​​"Item": "Average protein supply (g/cap/day) (3-year average)",
+​​​​​​​​         ​​​​"Item Code": "21013",
+​​​​​​​​         ​​​​"Unit": "g/capita/day",
 ​​​​​​​​         ​​​​"Value": "77"
         ​​​​},
         ​​​​{
