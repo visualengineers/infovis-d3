@@ -17,12 +17,14 @@
   <script>
     // global data var
     var data;
+    var preparedData;
 
     var fileName = 'data/FAOSTAT_data.json';
 
     loadJSON(function (response) {
       // Parse JSON string into object
       data = JSON.parse(response);
+      preparedData = JSON.parse(response);
 
       // call drawing functions
       draw();
@@ -75,7 +77,7 @@
      * prepare hierarchical data structure
      */
     function prepareData() {
-     var groupRegions = groupData(data, 'Region', 'Countries');
+     var groupRegions = groupData(preparedData, 'Region', 'Countries');
       groupRegions.forEach(function (region) {
         var groupedCountries = groupData(region.Countries, 'Area', 'Years');
         region.Countries = groupedCountries;
@@ -87,20 +89,30 @@
       return groupRegions;
     }
 
+    function getValue(country, year, code) {
+      var getValueResult;
+      data.forEach(function (item) {
+        if (item['Area'] == country && item['Year'] == year && item['Item Code'] == code) {
+          getValueResult =  item['Value'];
+          return;
+        }
+      });
+      return getValueResult
+    }
+
     /**
      * create the visualisation
      */
     function draw() {
-      var preparedData = prepareData();
+      preparedData = prepareData();
 
       var greeting = '<pre>There are ' + preparedData.length + ' regions. ';
       preparedData.forEach(function (region) {
-        greeting += region.Region + ' has ' + region.Countries.length + ' countries. ';
+        greeting += region.Region + ' has ' + region.Countries.length + ' countries.\n';
       });
+      greeting += 'By the way, Germany had ' + getValue('Germany', '2016', '21042') + ' percent of obese people in 2016.'
       greeting += '</pre>';
-      document.body.innerHTML = greeting;     
-
-      console.log(preparedData); 
+      document.body.innerHTML = greeting;
     }
 
   </script>
