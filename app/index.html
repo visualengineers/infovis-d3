@@ -1,17 +1,12 @@
 <!doctype html>
-
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="description" content="D3 example project">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Infovis</title>
-
   <script src="lib/d3.js"></script>
-
 </head>
-
 <body>
 
   <script>
@@ -31,7 +26,8 @@
     });
 
     /**
-     * load data
+     * Load data.
+     * @param {requestCallback} callback - The callback that handles the response.
      */
     function loadJSON(callback) {
       var xobj = new XMLHttpRequest();
@@ -47,7 +43,10 @@
     }
 
     /**
-     * make data hierarchical
+     * Make data hierarchical.
+     * @param {Object} flatData - The flat data structure.
+     * @param {string} key - The key which is used for the hierarchical transformation.
+     * @param {string} value - The name of the collection property under which children are stored.
      */
     function groupData(flatData, key, value) {
       var result = [];
@@ -71,13 +70,14 @@
       });
 
       return result;
-    } 
+    }
 
     /**
-     * prepare hierarchical data structure
+     * Prepare hierarchical data structure with Regions, Areas, and Years.
+     * @return {Object} The hierarchically prepared data.
      */
     function prepareData() {
-     var groupRegions = groupData(preparedData, 'Region', 'Countries');
+      var groupRegions = groupData(preparedData, 'Region', 'Countries');
       groupRegions.forEach(function (region) {
         var groupedCountries = groupData(region.Countries, 'Area', 'Years');
         region.Countries = groupedCountries;
@@ -89,19 +89,26 @@
       return groupRegions;
     }
 
+    /**
+     * Get a value from the data.
+     * @param {string} country - The country in the data.
+     * @param {number} year - The year of the parameter.
+     * @param {number} code - The numerical code of the parameter (see data source documentation).
+     * @return {number} The desired value in the data.
+     */
     function getValue(country, year, code) {
       var getValueResult;
       data.forEach(function (item) {
-        if (item['Area'] == country && item['Year'] == year && item['Item Code'] == code) {
-          getValueResult =  item['Value'];
+        if (item['Area'] === country && item['Year'] === year && item['Item Code'] === code) {
+          getValueResult = item['Value'];
           return;
         }
       });
-      return getValueResult
+      return getValueResult;
     }
 
     /**
-     * create the visualisation
+     * Create the visualisation. This is the main application entry point.
      */
     function draw() {
       preparedData = prepareData();
@@ -118,5 +125,4 @@
   </script>
 
 </body>
-
 </html>
