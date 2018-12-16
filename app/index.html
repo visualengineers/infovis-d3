@@ -75,16 +75,16 @@
      * prepare hierarchical data structure
      */
     function prepareData() {
-     var groupContinent = groupData(data, 'Continent', 'Countries');
-      groupContinent.forEach(function (continent) {
-        var groupedCountries = groupData(continent.Countries, 'Area', 'Years');
-        continent.Countries = groupedCountries;
+     var groupRegions = groupData(data, 'Region', 'Countries');
+      groupRegions.forEach(function (region) {
+        var groupedCountries = groupData(region.Countries, 'Area', 'Years');
+        region.Countries = groupedCountries;
         groupedCountries.forEach(function (country) {
           var groupedYears = groupData(country.Years, 'Year', 'Properties');
           country.Years = groupedYears;
         });
       });
-      return groupContinent;
+      return groupRegions;
     }
 
     /**
@@ -95,7 +95,7 @@
 
       var greeting = '<pre>There are ' + preparedData.length + ' regions. ';
       preparedData.forEach(function (region) {
-        greeting += region.Continent + ' has ' + region.Countries.length + ' countries. ';
+        greeting += region.Region + ' has ' + region.Countries.length + ' countries. ';
       });
       greeting += '</pre>';
       document.body.innerHTML = greeting;     

@@ -8,8 +8,10 @@ The data has been discovered on [Our-World-In-Data](https://ourworldindata.org),
 
 The data has been prepared as follows:
 
-* Two data exports for each of the regions
-    * Northern America and Europe > (List)
+* Two data exports for each of the regions (Select ISO2 Coding System)
+    * Northern America > (List)
+    * Europe > (List)
+    * Eastern Asia > (List)
     * Africa > (List)
 * Selection of specific items
     * Average protein supply (g/cap/day) (3-year average)
@@ -22,10 +24,18 @@ The data has been prepared as follows:
     * Prevalence of obesity in the adult population (18 years and older)
     * Prevalence of anemia among women of reproductive age (15-49 years)
 * Selection of all available years
-* In both exports, a column "Continent" has been added with the respective region
-* Superfluous columns and redundancies have been removed (Element, Element Code, Domain Code,Domain)
-* The 3-year-average entries have been replaced by the mean, in order to unify all entries in one year, e.g. 20012003 --> 2002
-* The column "Year Code" has been subsequently removed
+* Select Output Formatting Options
+    * Codes
+    * Units
+    * Null Values
+* In both exports, a column "Region" has been added with the respective region
+* Superfluous columns and redundancies have been removed
+    * Element
+    * Element Code
+    * Domain Code
+    * Domain
+    * Year Code
+* The 3-year-average entries have been replaced by the mean, in order to unify all entries in one year, e.g. 2001-2003 --> 2002
 * The CSV files have been converted with an [online tool](https://csv.keyangxiang.com)
 * The seperate files have been merged to one JSON data file
 
@@ -34,7 +44,7 @@ Within the example project, a hierarchical data preparation has been implemented
 ```JSON
 [
  {
-  "Continent": "Europe",
+  "Region": "Europe",
   "Countries": [
    {
     "Area": "Albania",  
@@ -43,7 +53,7 @@ Within the example project, a hierarchical data preparation has been implemented
       "Year": "2000",
       "Properties": [
         ​​​​{
-        ​​​​ "Area Code": "3",
+        ​​​​ "Area Code": "AL",
 ​​​​​​​​         ​​​​"Item": "Average protein supply (g/cap/day) (3-year average)",
 ​​​​​​​​         ​​​​"Item Code": "21013",
 ​​​​​​​​         ​​​​"Unit": "g/capita/day",
