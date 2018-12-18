@@ -47,6 +47,7 @@
      * @param {Object} flatData - The flat data structure.
      * @param {string} key - The key which is used for the hierarchical transformation.
      * @param {string} value - The name of the collection property under which children are stored.
+     * @return {Object} The hierarchically prepared data.
      */
     function groupData(flatData, key, value) {
       var result = [];
@@ -98,13 +99,56 @@
      */
     function getValue(country, year, code) {
       var getValueResult;
-      data.forEach(function (item) {
+      data.some(function (item) {
         if (item['Area'] === country && item['Year'] === year && item['Item Code'] === code) {
           getValueResult = item['Value'];
-          return;
+          return true;
         }
       });
       return getValueResult;
+    }
+
+    /**
+     * Retrieve maximum value for a given parameter.
+     * @param {number} code - The numerical code of the parameter (see data source documentation).
+     * @return {Object} Result containing value, year, and country.
+     */
+    function getMaxValue(code) {
+      var resultMax = 0;
+      var country = 'unknown';
+      var year = 'unknown';
+      data.forEach(function (item) {
+        var currentValue = Number.parseFloat(item['Value']);
+        if (item['Item Code'] === code && resultMax < currentValue) {
+          resultMax = currentValue;
+          country = item['Area'];
+          year = item['Year'];
+        }
+      });
+      return { 
+        "Value": resultMax,
+        "Year": year,
+        "Country": country
+      };
+    }
+
+    /**
+     * Computes the average for a region of a specific parameter of a given year
+     * @param {string} region - The region in the data.
+     * @param {number} year - The year of the parameter.
+     * @param {number} code - The numerical code of the parameter (see data source documentation).
+     * @return {number} The average value.
+     */
+    function getAverageForRegion(region, year, code) {
+      var sumAverage = 0;
+      var countAverage = 0;
+      data.forEach(function (item) {
+        if (item['Region'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
+          sumAverage += Number.parseFloat(item['Value']);
+          countAverage++;
+        }
+      });
+      return sumAverage / countAverage;
     }
 
     /**
@@ -117,7 +161,11 @@
       preparedData.forEach(function (region) {
         greeting += region.Region + ' has ' + region.Countries.length + ' countries.\n';
       });
-      greeting += 'By the way, Germany had ' + getValue('Germany', '2016', '21042') + ' percent of obese people in 2016.'
+      greeting += 'By the way, Germany had ' + getValue('Germany', '2016', '21042') + ' percent of obese people in 2016.\n\n'
+      greeting += 'Africa had an average index of ' + getAverageForRegion('Africa', '2016', '21032') + ' for political stability in 2015,\n';
+      greeting += 'while Europe had ' + getAverageForRegion('Europe', '2016', '21032') + '. ';
+      var bestIndex = getMaxValue('21032');
+      greeting += 'The best index was ' + bestIndex.Value + ' in ' + bestIndex.Country + ' in the year ' + bestIndex.Year + '.';
       greeting += '</pre>';
       document.body.innerHTML = greeting;
     }
