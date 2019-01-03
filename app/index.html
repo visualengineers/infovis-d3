@@ -1,175 +1,26 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="description" content="D3 example project">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Infovis</title>
   <script src="lib/d3.js"></script>
+  <script src="script/dataprovider.js"></script>
+  <script src="script/visualization.js"></script>
+  <script src="script/helper.js"></script>
+  </script>
 </head>
 <body>
 
   <script>
-    // global data var
-    var data;
-    var preparedData;
-
-    var fileName = 'data/FAOSTAT_data.json';
-
-    loadJSON(function (response) {
-      // Parse JSON string into object
-      data = JSON.parse(response);
-      preparedData = JSON.parse(response);
-
-      // call drawing functions
-      draw();
-    });
-
-    /**
-     * Load data.
-     * @param {requestCallback} callback - The callback that handles the response.
-     */
-    function loadJSON(callback) {
-      var xobj = new XMLHttpRequest();
-      xobj.overrideMimeType("application/json");
-      xobj.open('GET', fileName, true);
-      xobj.onreadystatechange = function () {
-        if (xobj.readyState == 4 && xobj.status == "200") {
-          // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-          callback(xobj.responseText);
-        }
-      };
-      xobj.send(null);
-    }
-
-    /**
-     * Make data hierarchical.
-     * @param {Object} flatData - The flat data structure.
-     * @param {string} key - The key which is used for the hierarchical transformation.
-     * @param {string} value - The name of the collection property under which children are stored.
-     * @return {Object} The hierarchically prepared data.
-     */
-    function groupData(flatData, key, value) {
-      var result = [];
-      var hierarchy = {};
-
-      flatData.forEach(function (node) {
-        hierarchy[node[key]] = node;
+    window.onload = function () {
+      DataProvider.loadJSON(function (response) {
+        // call drawing functions
+        Visualization.draw();
       });
-
-      Object.keys(hierarchy).forEach(function (root) {
-        var parent = {};
-        parent[key] = root;
-        parent[value] = [];
-        flatData.forEach(function (node) {
-          if (node[key] === root) {
-            parent[value].push(node);
-            delete node[key];
-          }
-        });
-        result.push(parent);
-      });
-
-      return result;
-    }
-
-    /**
-     * Prepare hierarchical data structure with Regions, Areas, and Years.
-     * @return {Object} The hierarchically prepared data.
-     */
-    function prepareData() {
-      var groupRegions = groupData(preparedData, 'Region', 'Countries');
-      groupRegions.forEach(function (region) {
-        var groupedCountries = groupData(region.Countries, 'Area', 'Years');
-        region.Countries = groupedCountries;
-        groupedCountries.forEach(function (country) {
-          var groupedYears = groupData(country.Years, 'Year', 'Properties');
-          country.Years = groupedYears;
-        });
-      });
-      return groupRegions;
-    }
-
-    /**
-     * Get a value from the data.
-     * @param {string} country - The country in the data.
-     * @param {number} year - The year of the parameter.
-     * @param {number} code - The numerical code of the parameter (see data source documentation).
-     * @return {number} The desired value in the data.
-     */
-    function getValue(country, year, code) {
-      var getValueResult;
-      data.some(function (item) {
-        if (item['Area'] === country && item['Year'] === year && item['Item Code'] === code) {
-          getValueResult = item['Value'];
-          return true;
-        }
-      });
-      return getValueResult;
-    }
-
-    /**
-     * Retrieve maximum value for a given parameter.
-     * @param {number} code - The numerical code of the parameter (see data source documentation).
-     * @return {Object} Result containing value, year, and country.
-     */
-    function getMaxValue(code) {
-      var resultMax = 0;
-      var country = 'unknown';
-      var year = 'unknown';
-      data.forEach(function (item) {
-        var currentValue = Number.parseFloat(item['Value']);
-        if (item['Item Code'] === code && resultMax < currentValue) {
-          resultMax = currentValue;
-          country = item['Area'];
-          year = item['Year'];
-        }
-      });
-      return { 
-        "Value": resultMax,
-        "Year": year,
-        "Country": country
-      };
-    }
-
-    /**
-     * Computes the average for a region of a specific parameter of a given year
-     * @param {string} region - The region in the data.
-     * @param {number} year - The year of the parameter.
-     * @param {number} code - The numerical code of the parameter (see data source documentation).
-     * @return {number} The average value.
-     */
-    function getAverageForRegion(region, year, code) {
-      var sumAverage = 0;
-      var countAverage = 0;
-      data.forEach(function (item) {
-        if (item['Region'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
-          sumAverage += Number.parseFloat(item['Value']);
-          countAverage++;
-        }
-      });
-      return sumAverage / countAverage;
-    }
-
-    /**
-     * Create the visualisation. This is the main application entry point.
-     */
-    function draw() {
-      preparedData = prepareData();
-
-      var greeting = '<pre>There are ' + preparedData.length + ' regions. ';
-      preparedData.forEach(function (region) {
-        greeting += region.Region + ' has ' + region.Countries.length + ' countries.\n';
-      });
-      greeting += 'By the way, Germany had ' + getValue('Germany', '2016', '21042') + ' percent of obese people in 2016.\n\n'
-      greeting += 'Africa had an average index of ' + getAverageForRegion('Africa', '2016', '21032') + ' for political stability in 2015,\n';
-      greeting += 'while Europe had ' + getAverageForRegion('Europe', '2016', '21032') + '. ';
-      var bestIndex = getMaxValue('21032');
-      greeting += 'The best index was ' + bestIndex.Value + ' in ' + bestIndex.Country + ' in the year ' + bestIndex.Year + '.';
-      greeting += '</pre>';
-      document.body.innerHTML = greeting;
-    }
-
+    };    
   </script>
 
 </body>
