@@ -2,7 +2,6 @@
  * DataProvider module
  */
 var DataProvider = function () {
-    // global data var
     var _data;
     var _preparedData;
     var _fileName = 'data/FAOSTAT_data.json';

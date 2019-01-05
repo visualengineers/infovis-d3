@@ -123,6 +123,7 @@ The property 'Area Code' from the source data matches the property 'iso_a3' from
 
 The structure is:
 
+```JSON
 {
   "type": "FeatureCollection",
   "features": [
@@ -148,3 +149,4 @@ The structure is:
     ...
   ]
 }
+```
