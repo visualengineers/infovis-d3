@@ -8,11 +8,6 @@ The data has been discovered on [Our-World-In-Data](https://ourworldindata.org),
 
 The data has been prepared as follows:
 
-* Two data exports for each of the regions (Select ISO2 Coding System)
-    * Northern America > (List)
-    * Europe > (List)
-    * Eastern Asia > (List)
-    * Africa > (List)
 * Selection of specific items
     * Average protein supply (g/cap/day) (3-year average)
     * Average supply of protein of animal origin (g/cap/day) (3-year average)
@@ -28,7 +23,20 @@ The data has been prepared as follows:
     * Codes
     * Units
     * Null Values
-* In both exports, a column "Region" has been added with the respective region
+* Data exports for each of the regions (Select ISO3 Coding System)
+    * Eastern Africa > (List)
+    * Middle Africa > (List)
+    * Northern Africa > (List)
+    * Southern Africa > (List)
+    * Western Afria > (List)
+    * Eastern Europe > (List)
+    * Northern Europe > (List)
+    * Southern Europe > (List)
+    * Western Europe > (List)
+    * Northern America > (List)
+    * Southern America > (List)
+* Add in each data export a new column "Continent" with the respective value
+* Add in each data export a column "Region" with the respective exported region
 * Superfluous columns and redundancies have been removed
     * Element
     * Element Code
