@@ -114,3 +114,37 @@ Within the example project, a hierarchical data preparation has been implemented
  ...
 ]
 ```
+
+## Map Data
+
+The map data (geodata.json) has been generated using https://geojson-maps.ash.ms/.
+
+The property 'Area Code' from the source data matches the property 'iso_a3' from the map data, thus linking both data sets for visualization prurposes.
+
+The structure is:
+
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Belize",
+        "iso_a3": "BLZ",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-89.14308041050332,17.80831899664932],
+              [-89.15090938999553,17.95546763760042],
+              [-89.02985734735182,18.001511338772488],
+              ...
+            ]
+          ]
+        },
+        ...
+      },
+    },
+    ...
+  ]
+}
