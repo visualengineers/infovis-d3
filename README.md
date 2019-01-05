@@ -52,20 +52,21 @@ Within the example project, a hierarchical data preparation has been implemented
 ```JSON
 [
  {
-  "Region": "Europe",
+  "Region": "Northern America",
   "Countries": [
    {
-    "Area": "Albania",  
+    "Area": "Bermuda",  
     "Years": [
      {
       "Year": "2000",
       "Properties": [
         ​​​​{
-        ​​​​ "Area Code": "AL",
+        ​​​​ "Area Code": "BMU",
+         "Continent": "America",
 ​​​​​​​​         ​​​​"Item": "Average protein supply (g/cap/day) (3-year average)",
 ​​​​​​​​         ​​​​"Item Code": "21013",
 ​​​​​​​​         ​​​​"Unit": "g/capita/day",
-​​​​​​​​         ​​​​"Value": "77"
+​​​​​​​​         ​​​​"Value": "105"
         ​​​​},
         ​​​​{
          "Item": "Gross domestic product per capita, PPP, dissemination (constant 2011 international $)",
