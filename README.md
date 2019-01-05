@@ -119,7 +119,7 @@ Within the example project, a hierarchical data preparation has been implemented
 
 The map data (geodata.json) has been generated using https://geojson-maps.ash.ms/.
 
-The property 'Area Code' from the source data matches the property 'iso_a3' from the map data, thus linking both data sets for visualization prurposes.
+The property 'Area Code' from the source data matches the property 'iso_a3' from the map data, thus linking both data sets for visualization purposes.
 
 The structure is:
 
