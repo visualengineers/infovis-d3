@@ -1,6 +1,6 @@
-# infovis-d3
+# Beleg für Programmieren von Benutzeroberflächen
 
-Example project for working with D3 and Node.
+Von M.Kleiner, P.Schumann, J.Drave und R.Pour.
 
 ## Data Source
 
