@@ -1,6 +1,6 @@
 # Beleg für Programmieren von Benutzeroberflächen
 
-Von M.Kleiner, P.Schumann, J.Drave und R.Pour.
+Von M.Kleiner, P.Schumann, J.Drache und R.Pour.
 
 ## Data Source
 
