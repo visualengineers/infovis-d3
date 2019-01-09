@@ -1,20 +1,21 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <Visualization/>
   </div>
 </template>
 
 <script lang="ts">
+import Visualization from '@/components/Visualization.vue';
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import Component from 'vue-class-component';
 
-export default Vue.extend({
-  name: 'app',
+@Component({
   components: {
-    HelloWorld,
+    Visualization,
   },
-});
+})
+export default class App extends Vue {
+}
 </script>
 
 <style lang="scss">
