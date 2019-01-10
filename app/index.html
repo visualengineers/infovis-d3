@@ -1,27 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="description" content="D3 example project">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Infovis</title>
-  <script src="lib/d3.js"></script>
-  <script src="script/dataprovider.js"></script>
-  <script src="script/visualization.js"></script>
-  <script src="script/helper.js"></script>
-  </script>
+    <title>Pbo Beleg</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Include own CSS Style-->
+    <link rel="stylesheet" href="style.css">
+
+
+    <!-- Include Bootstrap -->
+    <link rel="stylesheet" href="3rd/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <script src="3rd/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="3rd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="3rd/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+    <!-- Include D3 -->
+    <script src="3rd/d3.v5.min.js"></script>
+
+    <!-- Include own js -->
+    <script src="data/testdata.js"></script>
+    <script src="lib/diagram.js"></script>
 </head>
+
 <body>
+    <div class="container jumbotron" style="text-align:center">
+        <h1>PBo Beleg</h1>
+    </div>
+    <div class="container" style="text-align:center">
+        <div>
+            <svg id="diagram1"></svg>
+        </div>
+        <div>
+            <button onclick="animationLoop()">Play</button>
+            <button onclick="clearTimeout(animationTimeout)">Stop</button>
+            2000<input type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">2016
+        </div>
+        <script>
 
-  <script>
-    window.onload = function () {
-      DataProvider.loadJSON(function (response) {
-        // call drawing functions
-        Visualization.draw();
-      });
-    };    
-  </script>
+            var animationTimeout;
 
+            // Initialize Diagram with Year 2000
+            generateDiagram(data["2000"], "diagram1");
+
+            // If user changes the year -or- clicks the play button
+            // the following function triggers the Diagram update
+            function update() {
+                var year = Number($('#year').val())
+                updateDiagram(data[String(year)], "diagram1");
+            }
+
+            // If the user clicks on the play button
+            // animationLoop starts and continous the animation
+            // by updating the slider and calling the update function
+            function animationLoop() {
+                var slider = $('#year')
+                var year = Number(slider.val());
+                if (year == 2016)
+                    return;
+
+                slider.val(year + 1);
+
+                update();
+                animationTimeout = setTimeout(animationLoop, 1200);
+
+            }
+        </script>
 </body>
+
 </html>
