@@ -31,10 +31,10 @@ export class DataProvider {
   private static groupData<K extends keyof DataPoint, N extends string>(flatData: DataPoint[],
                                                                         groupingKey: K,
                                                                         groupName: N): Array<DataGroup<K, N>> {
-    const groupValues = DataProvider.unique(flatData.map((dataPoint) => dataPoint[groupingKey]));
-    const groups = groupValues.map((value) => [
+    const groupValues = DataProvider.unique(flatData.map(dataPoint => dataPoint[groupingKey]));
+    const groups = groupValues.map(value => [
         value,
-        flatData.filter((d) => d[groupingKey] === value),
+        flatData.filter(d => d[groupingKey] === value),
       ] as [DataPoint[K], DataPoint[]],
     );
 
@@ -56,10 +56,10 @@ export class DataProvider {
    */
   private static prepareData(originalData: DataPoint[]): DataHierarchy {
     return DataProvider.groupData(originalData, 'Region', 'Countries')
-      .map((regionGroup) => ({
+      .map(regionGroup => ({
         ...regionGroup,
         elements: DataProvider.groupData(regionGroup.elements, 'Area', 'Years')
-          .map((areaGroup) => ({
+          .map(areaGroup => ({
             ...areaGroup,
             elements: DataProvider.groupData(areaGroup.elements, 'Year', 'Properties'),
           })),
@@ -79,7 +79,7 @@ export class DataProvider {
   public getValue(area: DataPoint['Area'],
                   year: DataPoint['Year'],
                   code: DataPoint['Item Code']): DataPoint['Value'] | undefined {
-    const item = this.data.find((i) => i.Area === area && i.Year === year && i['Item Code'] === code);
+    const item = this.data.find(i => i.Area === area && i.Year === year && i['Item Code'] === code);
 
     if (item) {
       return item.Value;

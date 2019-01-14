@@ -1,64 +1,58 @@
 <template>
-  <pre v-if="dataProvider">There are {{preparedData.length}} regions.
-{{regionsText}}
-
-By the way, Germany had {{getValue('Germany', '2016', '21042')}} percent of obese people in 2016.
-Northern Africa had an average index of {{ getAverageForRegion('Northern Africa', '2016', '21032')}} for political stability in 2016,
-while Western Europe had {{ getAverageForRegion('Western Europe', '2016', '21032') }}.
-The best index was {{ getMaxValue('21032').Value }} in {{ getMaxValue('21032').Area }} in the year {{ getMaxValue('21032').Year }}.
-  </pre>
+    <div>
+        <Timeline :years="years" @change="selectedYear = $event"></Timeline>
+        <div>
+            <Key></Key>
+            <Diagram></Diagram>
+        </div>
+        <CountryDetail :year-hierarchy="selectedCountryYear"></CountryDetail>
+    </div>
 </template>
 
 <script lang="ts">
-  import { DataHierarchy } from '@/script/DataHierarchy';
-  import { DataPoint } from '@/script/DataPoint';
+  import CountryDetail from '@/components/CountryDetail.vue';
+  import Diagram from '@/components/Diagram.vue';
+  import Key from '@/components/Key.vue';
+  import Timeline from '@/components/Timeline.vue';
+  import { YearHierarchy } from '@/script/DataHierarchy';
   import { DataProvider } from '@/script/DataProvider';
   import Vue from 'vue';
   import Component from 'vue-class-component';
 
-  @Component
+  @Component({
+    components: {
+      CountryDetail,
+      Diagram,
+      Key,
+      Timeline,
+    },
+  })
   export default class Visualization extends Vue {
     public dataProvider: DataProvider | null = null;
+    private selectedArea: string | null = 'Germany';
+    public selectedYear: string | null = null;
 
     public async created() {
       this.dataProvider = await DataProvider.loadJSON();
     }
 
-    public getValue(area: DataPoint['Area'],
-                    year: DataPoint['Year'],
-                    code: DataPoint['Item Code']): DataPoint['Value'] | undefined {
+    get selectedCountryYear(): YearHierarchy | undefined {
+      if (!this.dataProvider || !this.selectedArea || !this.selectedYear) {
+        return undefined;
+      }
+
+      return this.dataProvider.preparedData
+        .flatMap(d => d.elements)
+        .flatMap(({ value: areaName, elements }) => areaName === this.selectedArea ? elements : [])
+        .find(({ value: year }) => year === this.selectedYear);
+    }
+
+    get years(): number[] | undefined {
       if (!this.dataProvider) {
         return undefined;
       }
 
-      return this.dataProvider.getValue(area, year, code);
-    }
-
-    public getMaxValue(code: DataPoint['Item Code']): DataPoint | undefined {
-      if (!this.dataProvider) {
-        return undefined;
-      }
-
-      return this.dataProvider.getMaxValue(code);
-    }
-
-    public getAverageForRegion(region: DataPoint['Region'],
-                               year: DataPoint['Year'],
-                               code: DataPoint['Item Code']): number | undefined {
-      if (!this.dataProvider) {
-        return undefined;
-      }
-
-      return this.dataProvider.getAverageForRegion(region, year, code);
-    }
-
-    get preparedData(): DataHierarchy {
-      return this.dataProvider ? this.dataProvider.preparedData : [];
-    }
-
-    get regionsText(): string {
-      return (this.dataProvider ? this.dataProvider.preparedData : [])
-        .reduce((acc, region) => acc + '\n' + `${region.value} has ${region.elements.length} countries.`, '');
+      return [...new Set(this.dataProvider.data.map(d => Number(d.Year)))];
     }
   }
 </script>
