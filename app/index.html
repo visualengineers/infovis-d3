@@ -46,6 +46,18 @@
             var animationTimeout;
             const data = loadData();
 
+            var minMax =  getMinMax(data,"polit");
+            console.log("Min: " + minMax[0] + " Max: " + minMax[1]);
+            setPolitDomain(minMax[0],minMax[1]);
+
+            minMax =  getMinMax(data,"bip");
+            console.log("Min: " + minMax[0] + " Max: " + minMax[1]);
+            setBipDomain(minMax[0],minMax[1]);
+            
+            minMax =  getMinMax(data,"fat");
+            console.log("Min: " + minMax[0] + " Max: " + minMax[1]);
+            setFatDomain(minMax[0],minMax[1]);
+
             // Initialize Diagram with Year 2000
             generateDiagram(data["2000"], "diagram1");
 

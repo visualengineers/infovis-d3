@@ -69,16 +69,48 @@ function formatData(json) {
     const countries = Object.keys(yearsObjects[i]);
     const countriesObjects = Object.values(yearsObjects[i]);
     for (let j = 0; j < countries.length; j++) {
+
+      // Overstep countries with missing data
+      if(typeof countriesObjects[j]["bip"] === 'undefined' ||
+      typeof countriesObjects[j]["fat"] === 'undefined' ||
+      typeof countriesObjects[j]["polit"] === 'undefined')
+        continue;
+        
       data2[years[i]].push({
         country: countries[j],
         bip: parseFloat(countriesObjects[j]["bip"]),
         fat: parseFloat(countriesObjects[j]["fat"]),
         polit: parseFloat(countriesObjects[j]["polit"])
       });
+      //console.log(countriesObjects[j]["bip"]);
     }
   }
 
   return data2;
+}
+
+
+function getMinMax(data, key){
+  var min=+Infinity;
+  var max=-Infinity;
+
+  for (var year in data)
+    for(var country in data[year])
+    {
+      // Overstep missing data
+      if(!key in data[year][country])continue;
+
+      const val = data[year][country][key];
+      if(typeof val === 'undefined' || isNaN(val))continue; 
+      
+      if(val >= max)
+        max = val
+        
+      if(val < min)
+        min = val
+    }
+
+    return [min,max];
 }
 
 function loadData() {

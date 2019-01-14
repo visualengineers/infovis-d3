@@ -11,10 +11,6 @@ var fatScale = d3.scaleLinear()
     .domain([0, 100])
     .range([0, height]);
 
-/*var dateScale = d3.scaleTime()
-    .range([0, width])
-    .domain([new Date('1999'), new Date('2017')]);
-*/
 var politScale = d3.scaleLinear()
     .domain([-2.5, 2.5])
     .range(["#FF1100", "#002366"]);
@@ -23,20 +19,33 @@ var bipScale = d3.scaleLinear()
     .domain([0, 100])
     .range([height, 0]);
 
+function setBipDomain(min, max) {
+    bipScale = d3.scaleLinear()
+        .domain([min, max])
+        .range([height, 0]);
+}
+
+function setPolitDomain(min, max) {
+    politScale = d3.scaleLinear()
+        .domain([min, max])
+        .range(["#FF1100", "#002366"]);
+}
+
+function setFatDomain(min, max) {
+    fatScale = d3.scaleLinear()
+        .domain([min, max])
+        .range([0, height]);
+}
 
 function generateDiagram(dataSet, svgId) {
 
 
     var svg = d3.select('#' + svgId)
-               .style("width", width + 300 + "px")
-        .style("height", height + 100 + "px")
-        
-        .call(d3.zoom().on("zoom", function () {
-            svg.attr("transform", d3.event.transform)
-         }));
+        .style("width", width + 300 + "px")
+        .style("height", height + 100 + "px");
 
     var svgGroup = svg.append('g')
-        .attr('transform', 'translate(50, 20)');
+        .attr('transform', 'translate(75, 20)');
 
     var circles = svgGroup
         .selectAll('circle')
@@ -64,7 +73,7 @@ function generateDiagram(dataSet, svgId) {
 
         .append("svg:title")
         .text(function (d) {
-            return d.country + "( BiP: " + d.bip + ", Fat: " + d.fat+", Polit : " + d.polit+ ")";
+            return d.country + "( BiP: " + d.bip + ", Fat: " + d.fat + ", Polit : " + d.polit + ")";
         })
 
 
@@ -72,21 +81,21 @@ function generateDiagram(dataSet, svgId) {
     // BiP-Axis
     svgGroup.append('g')
         .call(d3.axisLeft(bipScale))
-        .attr("transform", "translate(" + (-circleRadius*2) + "," + (-circleRadius) + ")");
+        .attr("transform", "translate(" + (-circleRadius * 2) + "," + (-circleRadius) + ")");
 
     // BiP-Label
     svgGroup.append('text')
         .attr("text-anchor", "end")
-        .attr("y", -50)
+        .attr("y", -75)
         .attr("x", -height / 2)
         .attr("dy", ".75em")
         .attr("transform", "rotate(-90)")
-        .text("BIP/Kopf")
+        .text("BIP/Kopf (in €)")
 
     // Fat-Axis
     svgGroup.append('g')
         .call(d3.axisBottom(fatScale))
-        .attr("transform", "translate(" + circleRadius + "," + (height+circleRadius*2) + ")");
+        .attr("transform", "translate(" + circleRadius + "," + (height + circleRadius * 2) + ")");
 
     // Fat Label
     svgGroup.append('text')
