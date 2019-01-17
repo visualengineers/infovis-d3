@@ -5,7 +5,7 @@ export interface DataPoint {
   Area: string;
   'Item Code': string;
   Item: string;
-  Year: string;
+  Year: number;
   Unit: string;
   Value: string;
 }

@@ -8,32 +8,32 @@
 </template>
 
 <script lang="ts">
-  import { YearHierarchy } from '@/script/DataHierarchy';
   import Vue from 'vue';
   import Component from 'vue-class-component';
+  import { DataGroup } from '@/script/DataGroup.d.ts'
 
   @Component({
     props: {
-      yearHierarchy: Object as any as (new () => YearHierarchy),
+      dataGroup: Object as unknown as (new() => DataGroup),
     },
   })
   export default class CountryDetail extends Vue {
-    public yearHierarchy?: YearHierarchy;
+    public dataGroup?: DataGroup;
 
     get countryName(): string | null {
-      if (!this.yearHierarchy) {
+      if (!this.dataGroup) {
         return null;
       }
 
-      return this.yearHierarchy.elements[0].Area;
+      return this.dataGroup.area;
     }
 
-    get year(): string | null {
-      if (!this.yearHierarchy) {
+    get year(): number | null {
+      if (!this.dataGroup) {
         return null;
       }
 
-      return this.yearHierarchy.value;
+      return this.dataGroup.year;
     }
   }
 </script>

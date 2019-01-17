@@ -6,18 +6,18 @@ import { DataGroup } from '@/script/DataGroup';
 import { DataPoint } from '@/script/DataPoint';
 
 export class DataProvider {
+  private static fileName = 'data/FAOSTAT_data.json';
 
   /**
    * Load data.
    */
   public static async loadJSON(): Promise<DataProvider> {
-    const data = await (await fetch(this.fileName)).json();
+    const data = (await (await fetch(this.fileName)).json() as Array<(DataPoint & {Year: string})>)
+    .map(d => ({...d, Year: Number.parseInt(d.Year, 10)}));
     const preparedData = DataProvider.prepareData(data);
 
     return new DataProvider(data, preparedData);
   }
-
-  private static fileName = 'data/FAOSTAT_data.json';
 
   private static unique<V>(data: V[]): V[] {
     return [...new Set(data)];
@@ -34,7 +34,7 @@ export class DataProvider {
       const props = areas.get(dataPoint.Year) || [];
 
       return regions.set(dataPoint.Region,
-        areas.set(dataPoint.Area, years.set(Number.parseInt(dataPoint.Year, 10), props.concat(dataPoint))));
+        areas.set(dataPoint.Area, years.set(dataPoint.Year, props.concat(dataPoint))));
     }, new Map<string, Map<string, Map<number, DataPoint[]>>>()))
     .reduce((acc, [region, areas]) =>
       acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>

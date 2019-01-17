@@ -14,7 +14,6 @@
   import Diagram from '@/components/Diagram.vue';
   import Key from '@/components/Key.vue';
   import Timeline from '@/components/Timeline.vue';
-  import { YearHierarchy } from '@/script/DataHierarchy';
   import { DataProvider } from '@/script/DataProvider';
   import Vue from 'vue';
   import Component from 'vue-class-component';
@@ -34,17 +33,6 @@
 
     public async created() {
       this.dataProvider = await DataProvider.loadJSON();
-    }
-
-    get selectedCountryYear(): YearHierarchy | undefined {
-      if (!this.dataProvider || !this.selectedArea || !this.selectedYear) {
-        return undefined;
-      }
-
-      return this.dataProvider.preparedData
-        .flatMap(d => d.elements)
-        .flatMap(({ value: areaName, elements }) => areaName === this.selectedArea ? elements : [])
-        .find(({ value: year }) => year === this.selectedYear);
     }
 
     get years(): number[] | undefined {
