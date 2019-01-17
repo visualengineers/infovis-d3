@@ -1,10 +1,6 @@
 <template>
     <div v-if="years">
-        <input @change="$emit('change', $event.target.value)" type="range" list="steps">
-
-        <datalist id="steps" style="display: inline">
-            <option v-for="year in sortedYears" :value="year" :label="year"></option>
-        </datalist>
+        <label>{{value}} <input @change="$emit('change', $event.target.value)" type="range" :min="minYear" :max="maxYear" step="1" v-model="value"></label>
     </div>
 </template>
 
@@ -14,14 +10,26 @@
 
   @Component({
     props: {
-      years: Array as number[],
-    }
+      years: Array as new () => number[],
+    },
   })
   export default class Timeline extends Vue {
     public years?: number[];
+    public value: number | null = this.minYear;
 
-    get sortedYears(): number[] {
-      return (this.years || []).sort();
+
+    get minYear(): number | null {
+      if (!this.years || this.years.length === 0) {
+        return null;
+      }
+      return Math.min(...this.years);
+    }
+
+    get maxYear(): number | null {
+      if (!this.years || this.years.length === 0) {
+        return null;
+      }
+      return Math.max(...this.years);
     }
   }
 </script>

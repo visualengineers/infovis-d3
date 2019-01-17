@@ -29,8 +29,8 @@
   })
   export default class Visualization extends Vue {
     public dataProvider: DataProvider | null = null;
-    private selectedArea: string | null = 'Germany';
     public selectedYear: string | null = null;
+    private selectedArea: string | null = 'Germany';
 
     public async created() {
       this.dataProvider = await DataProvider.loadJSON();
