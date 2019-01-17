@@ -12,8 +12,8 @@ export class DataProvider {
    * Load data.
    */
   public static async loadJSON(): Promise<DataProvider> {
-    const data = (await (await fetch(this.fileName)).json() as Array<(DataPoint & {Year: string})>)
-    .map(d => ({...d, Year: Number.parseInt(d.Year, 10)}));
+    const data = (await (await fetch(this.fileName)).json() as Array<(DataPoint & { Year: string })>)
+      .map(d => ({ ...d, Year: Number.parseInt(d.Year, 10) }));
     const preparedData = DataProvider.prepareData(data);
 
     return new DataProvider(data, preparedData);
@@ -34,13 +34,15 @@ export class DataProvider {
       const props = areas.get(dataPoint.Year) || [];
 
       return regions.set(dataPoint.Region,
-        areas.set(dataPoint.Area, years.set(dataPoint.Year, props.concat(dataPoint))));
+        areas.set(dataPoint.Area,
+          years.set(dataPoint.Year,
+            props.concat(dataPoint))));
     }, new Map<string, Map<string, Map<number, DataPoint[]>>>()))
-    .reduce((acc, [region, areas]) =>
-      acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>
-        acc1.concat(...Array.from(years)
-        .reduce((acc2, [year, values]) => acc2.concat({ year, area, region, values}), [] as DataGroup[])),
-        [] as DataGroup[])),
+      .reduce((acc, [region, areas]) =>
+        acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>
+          acc1.concat(...Array.from(years)
+            .reduce((acc2, [year, values]) => acc2.concat({ year, area, region, values }), [] as DataGroup[])),
+          [] as DataGroup[])),
         [] as DataGroup[]);
   }
 
@@ -55,8 +57,8 @@ export class DataProvider {
    * @return {number} The desired value in the data.
    */
   public getValue(area: DataPoint['Area'],
-                  year: DataPoint['Year'],
-                  code: DataPoint['Item Code']): DataPoint['Value'] | undefined {
+    year: DataPoint['Year'],
+    code: DataPoint['Item Code']): DataPoint['Value'] | undefined {
     const item = this.data.find(i => i.Area === area && i.Year === year && i['Item Code'] === code);
 
     if (item) {
@@ -86,8 +88,8 @@ export class DataProvider {
    * @return {number} The average value.
    */
   public getAverageForRegion(region: DataPoint['Region'],
-                             year: DataPoint['Year'],
-                             code: DataPoint['Item Code']): number {
+    year: DataPoint['Year'],
+    code: DataPoint['Item Code']): number {
     const filteredData = this.data
       .filter(({ Region, Year, ['Item Code']: Code, Value }) =>
         Region === region
