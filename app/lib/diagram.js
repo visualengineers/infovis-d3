@@ -84,7 +84,10 @@ function drawPolitCircle(value, svgId) {
         .style("stroke", "gray")
         .style("stroke-width", "1px")
         .attr('fill', function (d) {
-            return value === "?" ? "white" : politScale(value);
+            if(value)
+                return politScale(value);
+            else
+                return "yellow";
         })
 }
 
@@ -152,7 +155,7 @@ function generateDiagram(dataSet, svgId, onClickCallback) {
 
     legend.append("text")
         .text("Stable")
-        .attr("transform", "translate(" + (width * 6/40 + 10) + "," + height * 9/80+ ")")
+        .attr("transform", "translate(" + (width * 6/40 + 10) + "," + height * 9/80+ "  )")
         .style("font-size",(width * 1/80) + "px")
 
 
@@ -176,15 +179,24 @@ function generateDiagram(dataSet, svgId, onClickCallback) {
             return escapeId(d.country);
         })
         .attr('cx', function (d, i) {
-            return fatScale(d.fat) + circleRadius
+            if(d.fat)
+                return fatScale(d.fat) + circleRadius
+            else
+                return this.cx;
         })
         .attr('cy', function (d, i) {
-            return bipScale(d.bip) - circleRadius
+            if(d.bip)
+                return bipScale(d.bip) - circleRadius
+            else
+                return this.bip
+        })
+        .attr('fill', function (d, y) {
+            if(d.polit)
+                return politScale(d.polit)
+            else
+                return "yellow";
         })
         .attr('r', circleRadius)
-        .attr('fill', function (d, y) {
-            return politScale(d.polit)
-        })
         .style("opacity", "0.75")
         .on("mouseenter", function (d) {
             d3.select(this)
@@ -247,18 +259,25 @@ function updateDiagram(dataSet, svgId, year) {
         .transition()
         .duration(transitionDuration)
         .attr('cx', function (d, i) {
-            return fatScale(d.fat) + circleRadius
+            if(d.fat)
+                return fatScale(d.fat) + circleRadius
+            else
+                return this.cx;
         })
         .attr('cy', function (d, i) {
-            return bipScale(d.bip) - circleRadius
+            if(d.bip)
+                return bipScale(d.bip) - circleRadius
+            else
+                return this.bip
         })
         .attr('fill', function (d, y) {
-            return politScale(d.polit)
+            if(d.polit)
+                return politScale(d.polit)
+            else
+                return "yellow";
         })
 
 
     svg.select('#yearId')
-        .transition()
-        .duration(transitionDuration)
         .text(year)
 }
