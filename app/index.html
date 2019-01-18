@@ -10,7 +10,6 @@
     <!-- Include own CSS Style-->
     <link rel="stylesheet" href="style.css">
 
-
     <!-- Include Bootstrap -->
     <link rel="stylesheet" href="3rd/bootstrap.min.css">
     <script src="3rd/jquery-3.3.1.min.js"></script>
@@ -22,67 +21,59 @@
 
     <!-- Include own js -->
     <!--<script src="data/testdata.js"></script>-->
-    <script src="data_handler.js"></script>
+    <script src="lib/data_handler.js"></script>
     <script src="lib/diagram.js"></script>
+    <script src="lib/ui.js"></script>
+
 </head>
 
 <body>
-    <div class="container jumbotron" style="text-align:center">
+    <div class=" banner" style="text-align:center">
         <h1>PBo Beleg</h1>
     </div>
-    <div class="container" style="text-align:center">
-        <div>
-            <svg id="diagram1"></svg>
+    <div style="text-align:center;">
+        <div class="row">
+            <div class="col-lg-9" id="diagramContainerId">
+                    <svg id="diagram1"></svg>
+            </div>
+            <div class="col-md-2">
+                <div class="row">
+                    <div class="col-sm-4" style="text-align:right">Country:</div>
+                    <div class="col-md-3" id="countryId" style="text-align:left">Germany</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4" style="text-align:right">Bip:</div>
+                    <div class="col-md-2" id="bipId" style="text-align:left">200$</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4" style="text-align:right">Fat:</div>
+                    <div class="col-md-2" id="fatId" style="text-align:left">10</div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4" style="text-align:right">Political Stability:</div>
+                    <div class="col-md-2" id="fatId" style="text-align:left"><svg id="politId"></svg></div>
+                </div>
+                
+                <hr>
+                <div class="row">
+                    <select style="border: 1px;" size="20" id="countryList" onchange="onListSelectionChanges()">
+                    </select>
+                </div>
+            </div>
         </div>
-        <div>
-            <button onclick="animationLoop()">Play</button>
-            <button onclick="clearTimeout(animationTimeout)">Stop</button>
-            2000<input type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">2016
-        </div>
+        
+        <div class="col-lg-9" style="margin-left:10px;">
+                <button onclick="animationLoop()">Play</button>
+                <button onclick="clearTimeout(animationTimeout)">Stop</button>
+                <input style="width:90%" type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">
+            </div>
         <script>
             // load given fao data
+            data = loadData();
+
+            initUI(data, "diagram1", "diagramContainerId")
 
 
-            var animationTimeout;
-            const data = loadData();
-
-            var minMax =  getMinMax(data,"polit");
-            console.log("Min: " + minMax[0] + " Max: " + minMax[1]);
-            setPolitDomain(minMax[0],minMax[1]);
-
-            minMax =  getMinMax(data,"bip");
-            console.log("Min: " + minMax[0] + " Max: " + minMax[1]);
-            setBipDomain(minMax[0],minMax[1]);
-            
-            minMax =  getMinMax(data,"fat");
-            console.log("Min: " + minMax[0] + " Max: " + minMax[1]);
-            setFatDomain(minMax[0],minMax[1]);
-
-            // Initialize Diagram with Year 2000
-            generateDiagram(data["2000"], "diagram1");
-
-            // If user changes the year -or- clicks the play button
-            // the following function triggers the Diagram update
-            function update() {
-                var year = Number($('#year').val())
-                updateDiagram(data[String(year)], "diagram1");
-            }
-
-            // If the user clicks on the play button
-            // animationLoop starts and continous the animation
-            // by updating the slider and calling the update function
-            function animationLoop() {
-                var slider = $('#year')
-                var year = Number(slider.val());
-                if (year == 2016)
-                    return;
-
-                slider.val(year + 1);
-
-                update();
-                animationTimeout = setTimeout(animationLoop, 1200);
-
-            }
         </script>
 </body>
 
