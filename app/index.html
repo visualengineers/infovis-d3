@@ -48,29 +48,32 @@
                 </div>
                 <div class="row">
                     <div class="col-md-5" style="text-align:right;" title="Political stability and absence of violence/terrorism (index)">Political Stability:</div>
-                    <div class="col-md-2" id="fatId" style="text-align:left"><svg id="politId"></svg></div>
+                    <div class="col-md-2" style="text-align:left"><svg id="politId"></svg></div>
                 </div>
-                
-                <hr>
+                <div style="width:100%"class="row">
+                <hr style="width:100%"></div>
+
                 <div class="row">
-                    <select style="border: 0px;padding:10px;width:90%" size="25" id="countryList" onchange="onListSelectionChanges()">
+                    <select style="border: 0px;padding:10px;width:90%" id="countryList" size="2" onchange="onListSelectionChanges()">
                     </select>
                 </div>
             </div>
+            <div class="col-lg-9" style="margin-left:10px;">
+                    <button onclick="animationLoop()">Play</button>
+                    <button onclick="clearTimeout(animationTimeout)">Stop</button>
+                    <input style="width:90%" type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">
+                </div>
         </div>
         
-        <div class="col-lg-9" style="margin-left:10px;">
-                <button onclick="animationLoop()">Play</button>
-                <button onclick="clearTimeout(animationTimeout)">Stop</button>
-                <input style="width:90%" type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">
-            </div>
         <script>
             // load given fao data
             data = loadData();
 
+            $("#countryList").attr("size",Math.floor(window.innerHeight/60))
             initUI(data, "diagram1", "diagramContainerId")
 
 
+            console.log($("#countryList").attr("size"));
         </script>
 </body>
 
