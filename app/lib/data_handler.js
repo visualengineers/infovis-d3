@@ -26,6 +26,7 @@ function loadJson(url) {
 function formatData(json) {
   let data = {};
   let data2 = {};
+
   // reads the neccessary data from json
   for (let i = 0; i < json.length; i++) {
     // init the objects
@@ -70,12 +71,6 @@ function formatData(json) {
     const countries = Object.keys(yearsObjects[i]);
     const countriesObjects = Object.values(yearsObjects[i]);
     for (let j = 0; j < countries.length; j++) {
-
-      // Overstep countries with missing data
-      if(typeof countriesObjects[j]["bip"] === 'undefined' ||
-      typeof countriesObjects[j]["fat"] === 'undefined' ||
-      typeof countriesObjects[j]["polit"] === 'undefined')
-        continue;
         
       data2[years[i]].push({
         country: countries[j],
@@ -84,6 +79,7 @@ function formatData(json) {
         polit: parseFloat(countriesObjects[j]["polit"])
       });
     }
+    
   }
 
   return data2;

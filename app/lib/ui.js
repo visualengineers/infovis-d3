@@ -9,7 +9,6 @@ function initUI(_data, _svgId, _svgContainerId)
     data = _data;
     svgId = _svgId;
     svgContainerId = _svgContainerId;
-    $(window).resize(function(){location.reload();});
     
     politMinMax = getMinMax(data, "polit");
     bipMinMax = getMinMax(data, "bip");
@@ -111,9 +110,4 @@ function initDiagram(){
     highlightCountry(svgId,"Germany")
 
     updateLabels();
-}
-
-function refresh() { 
-    console.log("TEST");
-    location.reload(); 
 }
