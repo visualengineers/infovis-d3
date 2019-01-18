@@ -63,6 +63,7 @@ function formatData(json) {
     ]}
   */
   const years = Object.keys(data);
+
   const yearsObjects = Object.values(data);
   for (i = 0; i < years.length; i++) {
     data2[years[i]] = [];
@@ -82,13 +83,21 @@ function formatData(json) {
         fat: parseFloat(countriesObjects[j]["fat"]),
         polit: parseFloat(countriesObjects[j]["polit"])
       });
-      //console.log(countriesObjects[j]["bip"]);
     }
   }
 
   return data2;
 }
 
+function getCountryByTime(data, year, countryId){
+  return data[year].filter(item => item.country == countryId)[0]
+}
+
+function getCountryList(data){
+  
+  return  data["2000"].map(x => x.country)
+                      .sort();
+}
 
 function getMinMax(data, key){
   var min=+Infinity;
