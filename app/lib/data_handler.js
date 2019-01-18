@@ -99,6 +99,12 @@ function getCountryList(data){
                       .sort();
 }
 
+
+function escapeId(id){
+  return id.replace(/[ \(\)]/g, '');
+}
+
+
 function getMinMax(data, key){
   var min=+Infinity;
   var max=-Infinity;
@@ -123,6 +129,6 @@ function getMinMax(data, key){
 }
 
 function loadData() {
-  const json = loadJson("data/FAOSTAT_data.json");
+  const json = loadJson("../data/FAOSTAT_data.json");
   return formatData(json);
 }

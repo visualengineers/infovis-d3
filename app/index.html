@@ -36,27 +36,24 @@
             <div class="col-lg-9" id="diagramContainerId">
                     <svg id="diagram1"></svg>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
+                <h2 style="text-align:center" id="countryId">Germany</h2>
                 <div class="row">
-                    <div class="col-sm-4" style="text-align:right">Country:</div>
-                    <div class="col-md-3" id="countryId" style="text-align:left">Germany</div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4" style="text-align:right">Bip:</div>
+                    <div class="col-md-5" style="text-align:right" title="Gross domestic product per capita, PPP, dissemination (constant 2011 international $)">Gdp:</div>
                     <div class="col-md-2" id="bipId" style="text-align:left">200$</div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4" style="text-align:right">Fat:</div>
+                    <div class="col-md-5" style="text-align:right" title="Prevalence of obesity in the adult population (18 years and older)">Obesity:</div>
                     <div class="col-md-2" id="fatId" style="text-align:left">10</div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4" style="text-align:right">Political Stability:</div>
+                    <div class="col-md-5" style="text-align:right;" title="Political stability and absence of violence/terrorism (index)">Political Stability:</div>
                     <div class="col-md-2" id="fatId" style="text-align:left"><svg id="politId"></svg></div>
                 </div>
                 
                 <hr>
                 <div class="row">
-                    <select style="border: 1px;" size="20" id="countryList" onchange="onListSelectionChanges()">
+                    <select style="border: 0px;padding:10px;width:90%" size="25" id="countryList" onchange="onListSelectionChanges()">
                     </select>
                 </div>
             </div>
