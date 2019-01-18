@@ -9,12 +9,18 @@ function initUI(_data, _svgId, _svgContainerId)
     data = _data;
     svgId = _svgId;
     svgContainerId = _svgContainerId;
+    $(window).resize(function(){location.reload();});
     
     politMinMax = getMinMax(data, "polit");
     bipMinMax = getMinMax(data, "bip");
     fatMinMax = getMinMax(data, "fat");
 
     initDiagram();
+}
+
+function onClickDatapoint(d){
+    $("#countryList").val(d.country);
+    onListSelectionChanges();
 }
 
 function updateList(data, listId) {
@@ -25,15 +31,12 @@ function updateList(data, listId) {
             .appendTo(list)
     )
 
-    list.on('click', function () {
-    });
 }
 
 function onListSelectionChanges() {
     unhighlightCountries(svgId);
     let id = $("#countryList").val();
-
-    highlightCountry(svgId, id.replace(/[ \(\)]/g, ''));
+    highlightCountry(svgId, id);
 
     updateLabels();
 }
@@ -42,6 +45,7 @@ function updateLabels() {
 
     let year = $('#year').val();
     let id = $("#countryList").val();
+    
     let countryData = getCountryByTime(data, year, id);
 
     if (countryData == undefined)
@@ -54,15 +58,14 @@ function updateLabels() {
     $('#countryId').text(id);
     $('#bipId').text(countryData.bip + "$");
     $('#fatId').text(countryData.fat + "%");
-    $('#yearId').text(year);
     drawPolitCircle(countryData.polit, 'politId')
 }
 
 // If user changes the year -or- clicks the play button
 // the following function triggers the Diagram update
 function update() {
-    var year = Number($('#year').val())
-    updateDiagram(data[String(year)], svgId);
+    var year = $('#year').val()
+    updateDiagram(data[String(year)], svgId,year);
     updateLabels();
 }
 
@@ -78,6 +81,7 @@ function animationLoop() {
     slider.val(year + 1);
 
     update();
+    clearTimeout(animationTimeout)
     animationTimeout = setTimeout(animationLoop, 1200);
 }
 
@@ -93,7 +97,7 @@ function initDiagram(){
     setFatDomain(fatMinMax[0], fatMinMax[1]);
 
     // Initialize Diagram with Year 2000
-    generateDiagram(data["2000"], svgId);
+    generateDiagram(data["2000"], svgId,onClickDatapoint);
 
     // Update List of countries
     updateList(data, "countryList");
@@ -102,6 +106,14 @@ function initDiagram(){
     $('#year').val(2000);
 
     // Select Germany
-    $("countryList").val("Germany");
+    $("#countryList").val("Germany");
+    
+    highlightCountry(svgId,"Germany")
+
     updateLabels();
+}
+
+function refresh() { 
+    console.log("TEST");
+    location.reload(); 
 }
