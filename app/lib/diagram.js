@@ -112,7 +112,8 @@ function generateDiagram(dataSet, svgId, onClickCallback) {
 
     legend.append('text')
         .text("Political Stability")
-        .attr("transform", "translate(100,20)");
+        .attr("transform", "translate(" + width * 3/70+ "," + height * 1/30+ ")")
+        .style("font-size",(width * 3/200) + "px")
 
     var gradient = svg.append("defs").append("linearGradient")
         .attr("id", "politGradient")
@@ -141,14 +142,18 @@ function generateDiagram(dataSet, svgId, onClickCallback) {
 
     legend.append("text")
         .text("Unstable")
-        .attr("transform", "translate(10,90)")
+        .attr("transform", "translate(10," + height * 9/80+ ")")
+        .style("font-size",(width * 1/80) + "px")
+
     legend.append("text")
         .text("Neutral")
-        .attr("transform", "translate(120,90)")
+        .attr("transform", "translate(" + (width * 3/40 +10) + "," + height * 9/80+ ")")
+        .style("font-size",(width * 1/80) + "px")
 
     legend.append("text")
         .text("Stable")
-        .attr("transform", "translate(250,90)")
+        .attr("transform", "translate(" + (width * 6/40 + 10) + "," + height * 9/80+ ")")
+        .style("font-size",(width * 1/80) + "px")
 
 
     var svgGroup = svg.append('g')
