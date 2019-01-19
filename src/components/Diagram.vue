@@ -13,19 +13,19 @@ import * as d3 from 'd3';
 import { values } from 'd3';
 import { DataProvider } from '@/script/DataProvider';
 import { DataPoint } from '@/script/DataPoint';
+import { DiagramDomain } from '@/script/DiagramDomain';
 
 @Component({
   props: {
     data: Array as new () => DataGroup[],
     selectedRegions: Array as new () => string[],
+    diagramDomain: Object as () => DiagramDomain,
   },
 })
 export default class Diagram extends Vue {
   public data?: DataGroup[] | null;
   public selectedRegions?: string[];
-
-  // TODO: solve this with props
-  private dataProvider: DataProvider | null = null;
+  private diagramDomain?: DiagramDomain;
 
   private width = 1000;
   private height = 500;
@@ -35,81 +35,51 @@ export default class Diagram extends Vue {
   private proteinCode = '21013';
   private gdpCode = '22013';
 
-  private minimumAmenia: number | null = null;
-  private maximumAmenia: number | null = null;
-  private minimumProtein: number | null = null;
-  private maximumProtein: number | null = null;
-  private minimumGDP: number | null = null;
-  private maximumGDP: number | null = null;
-
   private anemiaScale: d3.ScaleLinear<number, number> | null = null;
   private proteinScale: d3.ScaleLinear<number, number> | null = null;
   private gdpScale: d3.ScaleLinear<number, number> | null = null;
   private colorScale: d3.ScaleOrdinal<string, string> | null = null;
 
-  public async created() {
-    this.dataProvider =  await DataProvider.loadJSON();
+  @Watch('diagramDomain')
+  public createSVG() {
+    if (this.diagramDomain) {
+      this.anemiaScale = d3.scaleLinear()
+        .domain([this.diagramDomain.minimumAnemia, this.diagramDomain.maximumAnemia])
+        .range([this.padding, this.width - this.padding]);
 
-    this.minimumAmenia = Number.parseFloat(this.dataProvider.getMinValue(this.anemiaCode)!.Value);
-    this.maximumAmenia = Number.parseFloat(this.dataProvider.getMaxValue(this.anemiaCode)!.Value);
+      this.proteinScale = d3.scaleLinear()
+        .domain([this.diagramDomain.minimumProtein, this.diagramDomain.maximumProtein])
+        .range([this.height - this.padding, this.padding]);
 
-    this.minimumProtein = Number.parseFloat(this.dataProvider.getMinValue(this.proteinCode)!.Value);
-    this.maximumProtein = Number.parseFloat(this.dataProvider.getMaxValue(this.proteinCode)!.Value);
+      this.gdpScale = d3.scaleLinear()
+        .domain([this.diagramDomain.minimumGDP, this.diagramDomain.maximumGDP])
+        .range([5, 50]);
 
-    this.minimumGDP = Number.parseFloat(this.dataProvider.getMinValue(this.gdpCode)!.Value);
-    this.maximumGDP = Number.parseFloat(this.dataProvider.getMaxValue(this.gdpCode)!.Value);
+      this.colorScale = d3.scaleOrdinal(d3.schemePaired);
 
-    this.anemiaScale = d3.scaleLinear()
-      .domain([this.minimumAmenia, this.maximumAmenia])
-      .range([this.padding, this.width - this.padding]);
+      const svg = d3
+        .select('svg')
+        .attr('width', this.width)
+        .attr('height', this.height);
 
-    this.proteinScale = d3.scaleLinear()
-      .domain([this.minimumProtein, this.maximumProtein])
-      .range([this.height - this.padding, this.padding]);
+      const svgGroup = svg.append('g');
 
-    this.gdpScale = d3.scaleLinear()
-      .domain([this.minimumGDP, this.maximumGDP])
-      .range([5, 50]);
+      svgGroup.append('g')
+        .call(d3.axisLeft(this.proteinScale))
+        .attr('transform', 'translate(' + this.padding + ', 0)');
 
-    this.colorScale = d3.scaleOrdinal(d3.schemePaired);
-
-    const svg = d3
-      .select('svg')
-      .attr('width', this.width)
-      .attr('height', this.height);
-
-    const svgGroup = svg.append('g');
-
-    svgGroup.append('g')
-      .call(d3.axisLeft(this.proteinScale!))
-      .attr('transform', 'translate(' + this.padding + ', 0)');
-
-    svgGroup.append('g')
-      .call(d3.axisBottom(this.anemiaScale!))
-      .attr('transform', 'translate(0, ' + (this.height - this.padding) + ')');
-
+      svgGroup.append('g')
+        .call(d3.axisBottom(this.anemiaScale))
+        .attr('transform', 'translate(0, ' + (this.height - this.padding) + ')');
+    }
   }
 
   public renderBubbles(): void {
-    if (this.data && this.dataProvider && this.selectedRegions) {
-      const interestingData = this.data
-        .filter(d =>
-          d.values.some(v => v['Item Code'] === this.anemiaCode)
-          && d.values.some(v => v['Item Code'] === this.proteinCode)
-          && d.values.some(v => v['Item Code'] === this.gdpCode)
-          && this.selectedRegions!.includes(d.region),
-        ).sort( (a, b) => {
-          const aGDP = Number.parseFloat(a.values.find(v => v['Item Code'] === this.gdpCode)!.Value);
-          const bGDP = Number.parseFloat(b.values.find(v => v['Item Code'] === this.gdpCode)!.Value);
-
-          return bGDP - aGDP;
-        },
-        );
-
+    if (this.data && this.selectedRegions) {
       const circles = d3.select('svg')
         .select('g')
         .selectAll('circle')
-        .data(interestingData, d => (d as DataGroup).area);
+        .data(this.data, d => (d as DataGroup).area);
 
       circles.enter()
         .append('circle')

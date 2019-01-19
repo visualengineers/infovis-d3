@@ -3,7 +3,7 @@
         <Timeline :years="years" @change="selectedYear = $event"></Timeline>
         <div>
             <Key :regions="regions" @change="selectedRegions = $event"></Key>
-            <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event"></Diagram>
+            <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain"></Diagram>
         </div>
         <CountryDetail :data="selectedDataSet"></CountryDetail>
     </div>
@@ -18,6 +18,7 @@
   import { DataProvider } from '@/script/DataProvider';
   import Vue from 'vue';
   import Component from 'vue-class-component';
+  import { DiagramDomain } from '@/script/DiagramDomain';
 
   @Component({
     components: {
@@ -33,6 +34,10 @@
     public selectedRegions: string[] = [];
     private selectedArea: string | null = 'Germany';
 
+    private anemiaCode = '21043';
+    private proteinCode = '21013';
+    private gdpCode = '22013';
+
     public async created() {
       this.dataProvider = await DataProvider.loadJSON();
     }
@@ -42,7 +47,14 @@
         return null;
       }
 
-      return [...new Set(this.dataProvider.data.map(d => d.Year))];
+      return [...new Set(
+        this.dataProvider.preparedData.filter(d =>
+          d.values.some(v => v['Item Code'] === this.anemiaCode)
+          && d.values.some(v => v['Item Code'] === this.proteinCode)
+          && d.values.some(v => v['Item Code'] === this.gdpCode),
+        )
+        .map(d => d.year),
+      )];
     }
 
     get regions(): string[] | null {
@@ -58,7 +70,19 @@
         return null;
       }
 
-      return this.dataProvider.preparedData.filter(({ year }) => this.selectedYear === year);
+      return this.dataProvider.preparedData.filter(({ year }) => this.selectedYear === year)
+        .filter(d =>
+          d.values.some(v => v['Item Code'] === this.anemiaCode)
+          && d.values.some(v => v['Item Code'] === this.proteinCode)
+          && d.values.some(v => v['Item Code'] === this.gdpCode)
+          && this.selectedRegions!.includes(d.region),
+        ).sort( (a, b) => {
+          const aGDP = Number.parseFloat(a.values.find(v => v['Item Code'] === this.gdpCode)!.Value);
+          const bGDP = Number.parseFloat(b.values.find(v => v['Item Code'] === this.gdpCode)!.Value);
+
+          return bGDP - aGDP;
+        },
+        );
     }
 
     get selectedDataSet(): DataGroup | null {
@@ -68,6 +92,21 @@
 
       return this.dataProvider.preparedData
         .find(({ year, area }) => this.selectedYear === year && this.selectedArea === area) || null;
+    }
+
+    get diagramDomain(): DiagramDomain | null {
+      if (!this.dataProvider) {
+        return null;
+      }
+
+      return {
+        minimumAnemia: Number.parseFloat(this.dataProvider.getMinValue(this.anemiaCode)!.Value),
+        maximumAnemia: Number.parseFloat(this.dataProvider.getMaxValue(this.anemiaCode)!.Value),
+        minimumProtein: Number.parseFloat(this.dataProvider.getMinValue(this.proteinCode)!.Value),
+        maximumProtein: Number.parseFloat(this.dataProvider.getMaxValue(this.proteinCode)!.Value),
+        minimumGDP: Number.parseFloat(this.dataProvider.getMinValue(this.gdpCode)!.Value),
+        maximumGDP: Number.parseFloat(this.dataProvider.getMaxValue(this.gdpCode)!.Value),
+      };
     }
   }
 </script>
