@@ -2,10 +2,10 @@
     <div>
         <Timeline :years="years" @change="selectedYear = $event"></Timeline>
         <div>
-            <Key></Key>
-            <Diagram></Diagram>
+            <Key :regions="regions" @change="selectedRegions = $event"></Key>
+            <Diagram :data="selectedData" :selected-regions="selectedRegions"></Diagram>
         </div>
-        <CountryDetail :year-hierarchy="selectedCountryYear"></CountryDetail>
+        <CountryDetail :data="selectedDataSet"></CountryDetail>
     </div>
 </template>
 
@@ -14,6 +14,7 @@
   import Diagram from '@/components/Diagram.vue';
   import Key from '@/components/Key.vue';
   import Timeline from '@/components/Timeline.vue';
+  import { DataGroup } from '@/script/DataGroup';
   import { DataProvider } from '@/script/DataProvider';
   import Vue from 'vue';
   import Component from 'vue-class-component';
@@ -28,19 +29,45 @@
   })
   export default class Visualization extends Vue {
     public dataProvider: DataProvider | null = null;
-    public selectedYear: string | null = null;
+    public selectedYear: number | null = null;
+    public selectedRegions: string[] = [];
     private selectedArea: string | null = 'Germany';
 
     public async created() {
       this.dataProvider = await DataProvider.loadJSON();
     }
 
-    get years(): number[] | undefined {
+    get years(): number[] | null {
       if (!this.dataProvider) {
-        return undefined;
+        return null;
       }
 
-      return [...new Set(this.dataProvider.data.map(d => Number(d.Year)))];
+      return [...new Set(this.dataProvider.data.map(d => d.Year))];
+    }
+
+    get regions(): string[] | null {
+      if (!this.dataProvider) {
+        return null;
+      }
+
+      return [...new Set(this.dataProvider.data.map(d => d.Region))];
+    }
+
+    get selectedData(): DataGroup[] | null {
+      if (!this.dataProvider) {
+        return null;
+      }
+
+      return this.dataProvider.preparedData.filter(({ year }) => this.selectedYear === year);
+    }
+
+    get selectedDataSet(): DataGroup | null {
+      if (!this.dataProvider) {
+        return null;
+      }
+
+      return this.dataProvider.preparedData
+        .find(({ year, area }) => this.selectedYear === year && this.selectedArea === area) || null;
     }
   }
 </script>

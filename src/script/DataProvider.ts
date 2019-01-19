@@ -8,6 +8,9 @@ import { DataPoint } from '@/script/DataPoint';
 export class DataProvider {
   private static fileName = 'data/FAOSTAT_data.json';
 
+  constructor(readonly data: DataPoint[], readonly preparedData: DataGroup[]) {
+  }
+
   /**
    * Load data.
    */
@@ -39,14 +42,11 @@ export class DataProvider {
             props.concat(dataPoint))));
       }, new Map<string, Map<string, Map<number, DataPoint[]>>>()))
       .reduce((acc, [region, areas]) =>
-        acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>
-          acc1.concat(...Array.from(years)
-            .reduce((acc2, [year, values]) => acc2.concat({ year, area, region, values }), [] as DataGroup[])),
-          [] as DataGroup[])),
+          acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>
+              acc1.concat(...Array.from(years)
+                .reduce((acc2, [year, values]) => acc2.concat({ year, area, region, values }), [] as DataGroup[])),
+            [] as DataGroup[])),
         [] as DataGroup[]);
-  }
-
-  constructor(readonly data: DataPoint[], readonly preparedData: DataGroup[]) {
   }
 
   /**
@@ -75,7 +75,7 @@ export class DataProvider {
     return this.data
       .reduce((maxItem, item) =>
         (!maxItem && item['Item Code'] === code) ||
-          item['Item Code'] === code && Number.parseFloat(item.Value) > Number.parseFloat(maxItem!.Value)
+        item['Item Code'] === code && Number.parseFloat(item.Value) > Number.parseFloat(maxItem!.Value)
           ? item
           : maxItem, undefined as DataPoint | undefined);
   }

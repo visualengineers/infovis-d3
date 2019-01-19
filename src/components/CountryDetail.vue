@@ -1,5 +1,5 @@
 <template>
-    <div v-if="yearHierarchy">
+    <div v-if="data">
         <ul>
             <li>{{countryName}}</li>
             <li>{{year}}</li>
@@ -8,32 +8,32 @@
 </template>
 
 <script lang="ts">
+  import { DataGroup } from '@/script/DataGroup.d.ts';
   import Vue from 'vue';
   import Component from 'vue-class-component';
-  import { DataGroup } from '@/script/DataGroup.d.ts'
 
   @Component({
     props: {
-      dataGroup: Object as unknown as (new() => DataGroup),
+      data: Object as unknown as (new() => DataGroup),
     },
   })
   export default class CountryDetail extends Vue {
-    public dataGroup?: DataGroup;
+    public data?: DataGroup;
 
     get countryName(): string | null {
-      if (!this.dataGroup) {
+      if (!this.data) {
         return null;
       }
 
-      return this.dataGroup.area;
+      return this.data.area;
     }
 
     get year(): number | null {
-      if (!this.dataGroup) {
+      if (!this.data) {
         return null;
       }
 
-      return this.dataGroup.year;
+      return this.data.year;
     }
   }
 </script>
