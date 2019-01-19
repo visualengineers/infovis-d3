@@ -1,6 +1,7 @@
 <template>
     <div v-if="years">
-        <label>{{value}} <input @change="$emit('change', $event.target.value)" type="range" :min="minYear" :max="maxYear" step="1" v-model="value"></label>
+        <label>{{value}} <input :max="maxYear" :min="minYear"
+                                @change="$emit('change', Number.parseInt($event.target.value, 10))" step="1" type="range" v-model="value"></label>
     </div>
 </template>
 
@@ -15,8 +16,14 @@
   })
   export default class Timeline extends Vue {
     public years?: number[];
-    public value: number | null = this.minYear;
+    public value: number | null = null;
 
+    public mounted() {
+      // TODO does not work yet
+      console.log('Creted', this.minYear)
+      this.value = this.minYear;
+      this.$emit('change', this.value);
+    }
 
     get minYear(): number | null {
       if (!this.years || this.years.length === 0) {
