@@ -94,6 +94,10 @@ export class DataProvider {
           : minItem, undefined as DataPoint | undefined);
   }
 
+  public getRegions(): string[] {
+    return Array.from(new Set(this.preparedData.map(d => d.region)));
+  }
+
   /**
    * Computes the average for a region of a specific parameter of a given year
    * @param {string} region - The region in the data.
