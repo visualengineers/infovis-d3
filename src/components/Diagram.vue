@@ -98,17 +98,21 @@ export default class Diagram extends Vue {
           && d.values.some(v => v['Item Code'] === this.proteinCode)
           && d.values.some(v => v['Item Code'] === this.gdpCode)
           && this.selectedRegions!.includes(d.region),
+        ).sort( (a, b) => {
+          const aGDP = Number.parseFloat(a.values.find(v => v['Item Code'] === this.gdpCode)!.Value);
+          const bGDP = Number.parseFloat(b.values.find(v => v['Item Code'] === this.gdpCode)!.Value);
+
+          return bGDP - aGDP;
+        },
         );
 
       const circles = d3.select('svg')
         .select('g')
         .selectAll('circle')
-        .data(interestingData, d => d.area!);
+        .data(interestingData, d => (d as DataGroup).area);
 
       circles.enter()
         .append('circle')
-        .transition()
-        .duration(1000)
         .attr('r', d =>
           this.gdpScale!(Number.parseFloat(d.values.find(v => v['Item Code'] === this.gdpCode)!.Value)),
         )
@@ -118,7 +122,9 @@ export default class Diagram extends Vue {
         .attr('cy', d =>
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
-        .attr('fill', d => this.colorScale!(d.region));
+        .attr('fill', d => this.colorScale!(d.region))
+        .attr('stroke', '#aaa')
+        .on('click', d => this.$emit('areaSelected', d.area));
 
       circles.transition()
         .duration(1000)

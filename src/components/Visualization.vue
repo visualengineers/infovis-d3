@@ -3,7 +3,7 @@
         <Timeline :years="years" @change="selectedYear = $event"></Timeline>
         <div>
             <Key :regions="regions" @change="selectedRegions = $event"></Key>
-            <Diagram :data="selectedData" :selected-regions="selectedRegions"></Diagram>
+            <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event"></Diagram>
         </div>
         <CountryDetail :data="selectedDataSet"></CountryDetail>
     </div>
