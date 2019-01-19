@@ -1,5 +1,7 @@
 <template>
   <div>
+    <button @click="changeYear">Change year</button>
+    {{this.selectedArea}}
     <svg></svg>
   </div>
 </template>
@@ -26,10 +28,25 @@ export default class Diagram extends Vue {
   private proteinCode = '21013';
   private gdpCode = '22013';
 
+  private minimumAmenia: number | null = null;
+  private maximumAmenia: number | null = null;
+  private minimumProtein: number | null = null;
+  private maximumProtein: number | null = null;
+  private minimumGDP: number | null = null;
+  private maximumGDP: number | null = null;
+
+  private anemiaScale: d3.ScaleLinear<number, number> | null = null;
+  private proteinScale: d3.ScaleLinear<number, number> | null = null;
+  private gdpScale: d3.ScaleLinear<number, number> | null = null;
+  private colorScale: d3.ScaleOrdinal<string, string> | null = null;
+
+  private year = 2000;
+
   public async created() {
+    // TODO: this should become a prop
     this.dataProvider =  await DataProvider.loadJSON();
     this.data = this.dataProvider.preparedData
-      .filter(d => d.year === 2012
+      .filter(d => d.year === this.year
         && d.values.some(v => v['Item Code'] === this.anemiaCode)
         && d.values.some(v => v['Item Code'] === this.proteinCode)
         && d.values.some(v => v['Item Code'] === this.gdpCode),
@@ -40,28 +57,28 @@ export default class Diagram extends Vue {
       .attr('width', this.width)
       .attr('height', this.height);
 
-    const minimumAmenia = Number.parseFloat(this.dataProvider.getMinValue(this.anemiaCode)!.Value);
-    const maximumAmenia = Number.parseFloat(this.dataProvider.getMaxValue(this.anemiaCode)!.Value);
+    this.minimumAmenia = Number.parseFloat(this.dataProvider.getMinValue(this.anemiaCode)!.Value);
+    this.maximumAmenia = Number.parseFloat(this.dataProvider.getMaxValue(this.anemiaCode)!.Value);
 
-    const minimumProtein = Number.parseFloat(this.dataProvider.getMinValue(this.proteinCode)!.Value);
-    const maximumProtein = Number.parseFloat(this.dataProvider.getMaxValue(this.proteinCode)!.Value);
+    this.minimumProtein = Number.parseFloat(this.dataProvider.getMinValue(this.proteinCode)!.Value);
+    this.maximumProtein = Number.parseFloat(this.dataProvider.getMaxValue(this.proteinCode)!.Value);
 
-    const minimumGDP = Number.parseFloat(this.dataProvider.getMinValue(this.gdpCode)!.Value);
-    const maximumGDP = Number.parseFloat(this.dataProvider.getMaxValue(this.gdpCode)!.Value);
+    this.minimumGDP = Number.parseFloat(this.dataProvider.getMinValue(this.gdpCode)!.Value);
+    this.maximumGDP = Number.parseFloat(this.dataProvider.getMaxValue(this.gdpCode)!.Value);
 
-    const anemiaScale = d3.scaleLinear()
-      .domain([minimumAmenia, maximumAmenia])
+    this.anemiaScale = d3.scaleLinear()
+      .domain([this.minimumAmenia, this.maximumAmenia])
       .range([this.padding, this.width - this.padding]);
 
-    const proteinScale = d3.scaleLinear()
-      .domain([minimumProtein, maximumProtein])
+    this.proteinScale = d3.scaleLinear()
+      .domain([this.minimumProtein, this.maximumProtein])
       .range([this.height - this.padding, this.padding]);
 
-    const gdpScale = d3.scaleLinear()
-      .domain([minimumGDP, maximumGDP])
+    this.gdpScale = d3.scaleLinear()
+      .domain([this.minimumGDP, this.maximumGDP])
       .range([5, 50]);
 
-    const colorScale = d3.scaleOrdinal(d3.schemePaired);
+    this.colorScale = d3.scaleOrdinal(d3.schemePaired);
 
     const svgGroup = svg.append('g');
 
@@ -71,23 +88,57 @@ export default class Diagram extends Vue {
       .enter()
         .append('circle')
         .attr('r', d =>
-          gdpScale(Number.parseFloat(d.values.find(v => v['Item Code'] === this.gdpCode)!.Value)),
+          this.gdpScale!(Number.parseFloat(d.values.find(v => v['Item Code'] === this.gdpCode)!.Value)),
         )
         .attr('cx', d =>
-            anemiaScale(Number.parseFloat(d.values.find(v => v['Item Code'] === this.anemiaCode)!.Value)),
+            this.anemiaScale!(Number.parseFloat(d.values.find(v => v['Item Code'] === this.anemiaCode)!.Value)),
         )
         .attr('cy', d =>
-          proteinScale(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
+          this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
-        .attr('fill', d => colorScale(d.region));
+        .attr('fill', d => this.colorScale!(d.region));
 
     svgGroup.append('g')
-      .call(d3.axisLeft(proteinScale))
+      .call(d3.axisLeft(this.proteinScale))
       .attr('transform', 'translate(' + this.padding + ', 0)');
 
     svgGroup.append('g')
-      .call(d3.axisBottom(anemiaScale))
+      .call(d3.axisBottom(this.anemiaScale))
       .attr('transform', 'translate(0, ' + (this.height - this.padding) + ')');
+  }
+
+  public changeYear(): void {
+    // TODO: do this when data changes
+    if (this.dataProvider) {
+      this.year = this.year < 2012 ? ++this.year : 2000;
+
+      this.data = this.dataProvider.preparedData
+        .filter(d => d.year === this.year
+          && d.values.some(v => v['Item Code'] === this.anemiaCode)
+          && d.values.some(v => v['Item Code'] === this.proteinCode)
+          && d.values.some(v => v['Item Code'] === this.gdpCode),
+        );
+
+      const svg = d3.select('svg');
+
+      const svgGroup = svg.select('g');
+
+      const circles = svgGroup
+        .selectAll('circle')
+        .data(this.data)
+        .transition()
+        .duration(500)
+          .attr('r', d =>
+            this.gdpScale!(Number.parseFloat(d.values.find(v => v['Item Code'] === this.gdpCode)!.Value)),
+          )
+          .attr('cx', d =>
+              this.anemiaScale!(Number.parseFloat(d.values.find(v => v['Item Code'] === this.anemiaCode)!.Value)),
+          )
+          .attr('cy', d =>
+            this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
+          )
+          .attr('fill', d => this.colorScale!(d.region));
+    }
   }
 }
 </script>
