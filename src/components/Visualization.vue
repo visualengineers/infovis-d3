@@ -141,6 +141,7 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
+  
 }
 .header {
   text-align: center;

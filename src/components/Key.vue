@@ -1,6 +1,6 @@
 <template>
     <div v-if="regions">
-        <label v-for="region in regions" :style="colorString(region)">{{region}} <input :value="region" @change="$emit('change', checkedRegions)"
+        <label v-for="region in regions" ><span class="dot" :style="colorString(region)"></span> {{region}} <input :value="region" @change="$emit('change', checkedRegions)"
                                                           type="checkbox" v-model="checkedRegions"></label>
     </div>
 </template>
@@ -21,12 +21,12 @@
     public checkedRegions: string[] = [];
     private regionColorScale?: d3.ScaleOrdinal<string, string>;
   
-    public colorString(region: string): string | null {
+    public colorString(region: string): string {
       if (!this.regionColorScale) {
-        return 'color:black';
+        return 'background-color:black';
       }
 
-      return 'color:' + this.regionColorScale(region);
+      return 'background-color:' + this.regionColorScale(region);
     }
   }
 </script>
@@ -34,5 +34,12 @@
 <style scoped lang="scss">
  label {
   display: block;
+}
+.dot {
+  height: 15px;
+  width: 15px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
 }
 </style>
