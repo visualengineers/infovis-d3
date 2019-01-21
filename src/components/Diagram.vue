@@ -67,6 +67,11 @@ export default class Diagram extends Vue {
       svgGroup.append('g')
         .call(d3.axisLeft(this.proteinScale))
         .attr('transform', 'translate(' + this.padding + ', 0)');
+     
+      
+      const xLabel = svgGroup.append('text')
+        .text('Prevalence of anemia among women of reproductive age (15-49 years)')
+        .attr('y', this.height - 20);
 
       svgGroup.append('g')
         .call(d3.axisBottom(this.anemiaScale))
