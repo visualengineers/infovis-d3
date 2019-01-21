@@ -1,8 +1,8 @@
-import { DataPoint } from '@/script/DataPoint';
+import { DataPoint } from './DataPoint';
 
-export interface DataGroup<K extends keyof DataPoint, N extends string, D  = DataPoint> {
-  name: N;
-  property: K;
-  value: DataPoint[K];
-  elements: D[];
+export interface DataGroup {
+  year: number;
+  region: string;
+  area: string;
+  values: DataPoint[];
 }
