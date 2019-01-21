@@ -1,7 +1,17 @@
 <template>
-    <div v-if="data">
-      <p> In {{year}}, {{countryName}} had ... Amenia and ... protein data</p>
+    <div v-if="data">   
+    <b-jumbotron >
+      <h2> {{countryName}}, {{year}} </h2>
+      <p> Prevalence of anemia: {{anemia}}% </p>
+      <p> Protein intake: {{proteinIntake}} (g/cap/day) </p>
+      <p> GDP: {{gdp}} (Trumps$) </p>
+    </b-jumbotron>
     </div>
+    <div v-else>
+       <b-jumbotron >
+      <p> Pick the region , country and year i gonna show you something cool </p>
+    </b-jumbotron>
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,6 +26,27 @@
   })
   export default class CountryDetail extends Vue {
     public data?: DataGroup;
+
+    get anemia(): string | null {
+      if(!this.data){
+        return null;
+      }
+      return this.data.values.find(v => v['Item Code'] === '21043')!.Value;
+    }
+
+    get proteinIntake(): string | null {
+      if(!this.data){
+        return null;
+      }
+      return this.data.values.find(v => v['Item Code'] === '21013')!.Value;
+    }
+
+    get gdp(): string | null {
+      if(!this.data){
+        return null;
+      }
+      return this.data.values.find(v => v['Item Code'] === '22013')!.Value;
+    }
 
     get countryName(): string | null {
       if (!this.data) {
@@ -37,8 +68,5 @@
 
 <style scoped lang="scss">
 
-p {
-  text-align: center;
-}
   
 </style>

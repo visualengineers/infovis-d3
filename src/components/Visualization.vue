@@ -11,15 +11,13 @@
         <b-col cols="2" class="key">
           <Key :regions="regions" @change="selectedRegions = $event"></Key>
         </b-col>
-        <b-col cols="10">
+        <b-col cols="7">
           <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain"></Diagram>
         </b-col>
-      </b-row>
+        <b-col cols="3"><CountryDetail :data="selectedDataSet"></CountryDetail></b-col>
 
-      <b-row>
-        <b-col><CountryDetail :data="selectedDataSet"></CountryDetail></b-col>
       </b-row>
-
+     
       <div class="copy">
         &copy; 2019 Belegarbeit PBO von Oliver von Seydlitz, Leo Lindhorst, Duc Hung Nguyen, Denis Keiling
       </div>

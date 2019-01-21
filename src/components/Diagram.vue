@@ -27,7 +27,7 @@ export default class Diagram extends Vue {
   public selectedRegions?: string[];
   private diagramDomain?: DiagramDomain;
 
-  private width = 1000;
+  private width = 800;
   private height = 500;
   private padding = 50;
 
