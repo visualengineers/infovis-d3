@@ -1,27 +1,78 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="description" content="D3 example project">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Infovis</title>
-  <script src="lib/d3.js"></script>
-  <script src="script/dataprovider.js"></script>
-  <script src="script/visualization.js"></script>
-  <script src="script/helper.js"></script>
-  </script>
+    <title>Pbo Beleg</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Include own CSS Style-->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Include Bootstrap -->
+    <link rel="stylesheet" href="3rd/bootstrap.min.css">
+    <script src="3rd/jquery-3.3.1.min.js"></script>
+    <script src="3rd/popper.min.js"></script>
+    <script src="3rd/bootstrap.min.js"></script>
+
+    <!-- Include D3 -->
+    <script src="3rd/d3.v5.min.js"></script>
+
+    <!-- Include own js -->
+    <!--<script src="data/testdata.js"></script>-->
+    <script src="lib/data_handler.js"></script>
+    <script src="lib/diagram.js"></script>
+    <script src="lib/ui.js"></script>
+
 </head>
+
 <body>
+    <div class=" banner" style="text-align:center">
+        <h1>PBo Beleg</h1>
+    </div>
+    <div style="text-align:center;">
+        <div class="row">
+            <div class="col-lg-9" id="diagramContainerId">
+                    <svg id="diagram1"></svg>
+            </div>
+            <div class="col-md-3">
+                <h2 style="text-align:center" id="countryId">Germany</h2>
+                <div class="row">
+                    <div class="col-md-5" style="text-align:right" title="Gross domestic product per capita, PPP, dissemination (constant 2011 international $)">Gdp:</div>
+                    <div class="col-md-2" id="bipId" style="text-align:left">200$</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5" style="text-align:right" title="Prevalence of obesity in the adult population (18 years and older)">Obesity:</div>
+                    <div class="col-md-2" id="fatId" style="text-align:left">10</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5" style="text-align:right;" title="Political stability and absence of violence/terrorism (index)">Political Stability:</div>
+                    <div class="col-md-2" style="text-align:left"><svg id="politId"></svg></div>
+                </div>
+                <div style="width:100%"class="row">
+                <hr style="width:100%"></div>
 
-  <script>
-    window.onload = function () {
-      DataProvider.loadJSON(function (response) {
-        // call drawing functions
-        Visualization.draw();
-      });
-    };    
-  </script>
+                <div class="row">
+                    <select style="border: 0px;padding:10px;width:90%" id="countryList" size="2" onchange="onListSelectionChanges()">
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-9" style="margin-left:10px;">
+                    <button onclick="animationLoop()">Play</button>
+                    <button onclick="clearTimeout(animationTimeout)">Stop</button>
+                    <input style="width:90%" type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">
+                </div>
+        </div>
+        
+        <script>
+            // load given fao data
+            data = loadData();
 
+            $("#countryList").attr("size",Math.floor(window.innerHeight/60))
+            initUI(data, "diagram1", "diagramContainerId")
+
+        </script>
 </body>
+
 </html>
