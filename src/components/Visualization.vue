@@ -132,10 +132,10 @@
 <style scoped lang="scss">
  .key {
   padding-top: 50px;
+  padding-left: 50px;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
 }
 .header {
   text-align: center;
