@@ -34,13 +34,13 @@ export class DataProvider {
     return Array.from(originalData.reduce((regions, dataPoint) => {
       const areas = regions.get(dataPoint.Region) || new Map();
       const years = areas.get(dataPoint.Area) || new Map();
-      const props = areas.get(dataPoint.Year) || [];
+      const props = years.get(dataPoint.Year) || [];
 
       return regions.set(dataPoint.Region,
         areas.set(dataPoint.Area,
           years.set(dataPoint.Year,
             props.concat(dataPoint))));
-    }, new Map<string, Map<string, Map<number, DataPoint[]>>>()))
+      }, new Map<string, Map<string, Map<number, DataPoint[]>>>()))
       .reduce((acc, [region, areas]) =>
           acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>
               acc1.concat(...Array.from(years)
@@ -78,6 +78,24 @@ export class DataProvider {
         item['Item Code'] === code && Number.parseFloat(item.Value) > Number.parseFloat(maxItem!.Value)
           ? item
           : maxItem, undefined as DataPoint | undefined);
+  }
+
+  /**
+   * Retrieve minimum value for a given parameter.
+   * @param {number} code - The numerical code of the parameter (see data source documentation).
+   * @return {Object} Result containing value, year, and country.
+   */
+  public getMinValue(code: string): DataPoint | undefined {
+    return this.data
+      .reduce((minItem, item) =>
+        (!minItem && item['Item Code'] === code) ||
+          item['Item Code'] === code && Number.parseFloat(item.Value) < Number.parseFloat(minItem!.Value)
+          ? item
+          : minItem, undefined as DataPoint | undefined);
+  }
+
+  public getRegions(): string[] {
+    return Array.from(new Set(this.preparedData.map(d => d.region)));
   }
 
   /**
