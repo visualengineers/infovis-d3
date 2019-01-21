@@ -8,6 +8,7 @@
 <script lang="ts">
   import Vue from 'vue';
   import Component from 'vue-class-component';
+  import { Watch } from 'vue-property-decorator';
 
   @Component({
     props: {
@@ -18,9 +19,8 @@
     public years?: number[];
     public value: number | null = null;
 
-    public mounted() {
-      // TODO does not work yet
-      console.log('Creted', this.minYear)
+    @Watch('years')
+    public onYearsChanged() {
       this.value = this.minYear;
       this.$emit('change', this.value);
     }

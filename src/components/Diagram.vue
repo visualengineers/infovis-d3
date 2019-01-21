@@ -73,7 +73,7 @@ export default class Diagram extends Vue {
         .attr('y', this.height - 20)
         .attr('x', 50)
         .style('font-size', '10px');
- 
+
       svgGroup.append('g')
         .call(d3.axisBottom(this.anemiaScale))
         .attr('transform', 'translate(0, ' + (this.height - this.padding) + ')');
