@@ -68,9 +68,20 @@ export default class Diagram extends Vue {
         .call(d3.axisLeft(this.proteinScale))
         .attr('transform', 'translate(' + this.padding + ', 0)');
 
+      svgGroup.append('text')
+        .text('Prevalence of anemia among women of reproductive age (15-49 years)')
+        .attr('y', this.height - 20)
+        .attr('x', 50)
+        .style('font-size', '10px');
+ 
       svgGroup.append('g')
         .call(d3.axisBottom(this.anemiaScale))
         .attr('transform', 'translate(0, ' + (this.height - this.padding) + ')');
+
+      svgGroup.append('text')
+        .text('Average protein supply (g/cap/day) (3-year average)')
+        .attr('transform', 'translate(15,' + (this.height - 50) + '),rotate(-90)')
+        .style('font-size', '10px');
     }
   }
 
