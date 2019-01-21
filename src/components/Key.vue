@@ -38,7 +38,7 @@
 .dot {
   height: 15px;
   width: 15px;
-  background-color: #bbb;
+  border: 1px solid black;
   border-radius: 50%;
   display: inline-block;
 }
