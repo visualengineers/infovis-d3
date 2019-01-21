@@ -1,11 +1,21 @@
 <template>
     <div>
-        <Timeline :years="years" @change="selectedYear = $event"></Timeline>
-        <div>
-            <Key :regions="regions" @change="selectedRegions = $event"></Key>
-            <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain"></Diagram>
+    <div class="header">
+    <h1>Hello, World in data</h1>
+     </div>
+     <b-row>
+        <b-col class="slider"><Timeline :years="years" @change="selectedYear = $event"></Timeline></b-col>
+        </b-row>
+          <b-row>
+            <b-col cols="2" class="key"><Key :regions="regions" @change="selectedRegions = $event"></Key></b-col>
+            <b-col cols="10"><Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain"></Diagram></b-col>
+          </b-row>
+          <b-row>
+        <b-col><CountryDetail :data="selectedDataSet"></CountryDetail></b-col>
+        </b-row>
+        <div class="copy">
+        &copy; 2019 Belegarbeit PBO von Oliver von Seydlitz, Leo Lindhorst, Duc Hung Nguyen, Denis Keiling
         </div>
-        <CountryDetail :data="selectedDataSet"></CountryDetail>
     </div>
 </template>
 
@@ -19,6 +29,7 @@
   import Vue from 'vue';
   import Component from 'vue-class-component';
   import { DiagramDomain } from '@/script/DiagramDomain';
+
 
   @Component({
     components: {
@@ -112,21 +123,29 @@
 </script>
 
 <style scoped lang="scss">
-    h3 {
-        margin: 40px 0 0;
-    }
+ .key {
 
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
+          padding-top: 50px;
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+          text-align: center;
 
-    li {
-        display: inline-block;
-        margin: 0 10px;
-    }
+        }
+.header {
 
-    a {
-        color: #42b983;
-    }
+          text-align: center;
+
+        }
+.slider {
+          
+          text-align: center;
+          width: 100%;
+
+}
+.copy {
+          
+          text-align: center;
+
+}
 </style>

@@ -126,8 +126,5 @@ export default class Diagram extends Vue {
 </script>
 
 <style scoped lang="scss">
-svg {
-  width: 1000;
-  height: 500;
-}
+
 </style>
