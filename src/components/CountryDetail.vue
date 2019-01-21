@@ -9,7 +9,7 @@
     </div>
     <div v-else>
        <b-jumbotron >
-      <p> Pick the region , country and year i gonna show you something cool </p>
+      <p> Pick the country and slide the year to see more cool stuffs </p>
     </b-jumbotron>
   </div>
 </template>
