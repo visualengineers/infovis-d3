@@ -9,10 +9,10 @@
 
       <b-row>
         <b-col cols="2" class="key">
-          <Key :regions="regions" @change="selectedRegions = $event"></Key>
+          <Key :regions="regions" @change="selectedRegions = $event" :regionColorScale="regionColorScale"></Key>
         </b-col>
         <b-col cols="10">
-          <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain"></Diagram>
+          <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain" :regionColorScale="regionColorScale"></Diagram>
         </b-col>
       </b-row>
 
@@ -36,6 +36,7 @@
   import Vue from 'vue';
   import Component from 'vue-class-component';
   import { DiagramDomain } from '@/script/DiagramDomain';
+  import * as d3 from 'd3';
 
 
   @Component({
@@ -110,6 +111,10 @@
 
       return this.dataProvider.preparedData
         .find(({ year, area }) => this.selectedYear === year && this.selectedArea === area) || null;
+    }
+
+    get regionColorScale(): d3.ScaleOrdinal<string, string> {
+      return d3.scaleOrdinal(d3.schemePaired);
     }
 
     get diagramDomain(): DiagramDomain | null {

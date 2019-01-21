@@ -20,12 +20,14 @@ import { DiagramDomain } from '@/script/DiagramDomain';
     data: Array as new () => DataGroup[],
     selectedRegions: Array as new () => string[],
     diagramDomain: Object as () => DiagramDomain,
+    regionColorScale: Object as () => d3.ScaleOrdinal<string, string>,
   },
 })
 export default class Diagram extends Vue {
   public data?: DataGroup[] | null;
   public selectedRegions?: string[];
   private diagramDomain?: DiagramDomain;
+  private regionColorScale?: d3.ScaleOrdinal<string, string>;
 
   private width = 1000;
   private height = 500;
@@ -38,7 +40,6 @@ export default class Diagram extends Vue {
   private anemiaScale: d3.ScaleLinear<number, number> | null = null;
   private proteinScale: d3.ScaleLinear<number, number> | null = null;
   private gdpScale: d3.ScaleLinear<number, number> | null = null;
-  private colorScale: d3.ScaleOrdinal<string, string> | null = null;
 
   @Watch('diagramDomain')
   public createSVG() {
@@ -54,8 +55,6 @@ export default class Diagram extends Vue {
       this.gdpScale = d3.scaleLinear()
         .domain([this.diagramDomain.minimumGDP, this.diagramDomain.maximumGDP])
         .range([5, 50]);
-
-      this.colorScale = d3.scaleOrdinal(d3.schemePaired);
 
       const svg = d3
         .select('svg')
@@ -73,7 +72,7 @@ export default class Diagram extends Vue {
         .attr('y', this.height - 20)
         .attr('x', 50)
         .style('font-size', '10px');
- 
+
       svgGroup.append('g')
         .call(d3.axisBottom(this.anemiaScale))
         .attr('transform', 'translate(0, ' + (this.height - this.padding) + ')');
@@ -103,7 +102,7 @@ export default class Diagram extends Vue {
         .attr('cy', d =>
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
-        .attr('fill', d => this.colorScale!(d.region))
+        .attr('fill', d => this.regionColorScale!(d.region))
         .attr('stroke', '#aaa')
         .on('click', d => this.$emit('areaSelected', d.area));
 
@@ -118,7 +117,7 @@ export default class Diagram extends Vue {
         .attr('cy', d =>
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
-        .attr('fill', d => this.colorScale!(d.region));
+        .attr('fill', d => this.regionColorScale!(d.region));
 
       circles.exit().remove();
     }
