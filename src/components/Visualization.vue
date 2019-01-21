@@ -5,17 +5,24 @@
      </div>
      <b-row>
         <b-col class="slider"><Timeline :years="years" @change="selectedYear = $event"></Timeline></b-col>
-        </b-row>
-          <b-row>
-            <b-col cols="2" class="key"><Key :regions="regions" @change="selectedRegions = $event"></Key></b-col>
-            <b-col cols="10"><Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain"></Diagram></b-col>
-          </b-row>
-          <b-row>
+      </b-row>
+
+      <b-row>
+        <b-col cols="2" class="key">
+          <Key :regions="regions" @change="selectedRegions = $event"></Key>
+        </b-col>
+        <b-col cols="10">
+          <Diagram :data="selectedData" :selected-regions="selectedRegions" @areaSelected="selectedArea = $event" :diagramDomain="diagramDomain"></Diagram>
+        </b-col>
+      </b-row>
+
+      <b-row>
         <b-col><CountryDetail :data="selectedDataSet"></CountryDetail></b-col>
-        </b-row>
-        <div class="copy">
+      </b-row>
+
+      <div class="copy">
         &copy; 2019 Belegarbeit PBO von Oliver von Seydlitz, Leo Lindhorst, Duc Hung Nguyen, Denis Keiling
-        </div>
+      </div>
     </div>
 </template>
 
@@ -124,28 +131,20 @@
 
 <style scoped lang="scss">
  .key {
-
-          padding-top: 50px;
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
-          text-align: center;
-
-        }
-.header {
-
-          text-align: center;
-
-        }
-.slider {
-          
-          text-align: center;
-          width: 100%;
-
+  padding-top: 50px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
-.copy {
-          
-          text-align: center;
-
+.header {
+  text-align: center;
+}
+.slider {
+  text-align: center;
+  width: 100%;
+}
+.copy {        
+  text-align: center;
 }
 </style>

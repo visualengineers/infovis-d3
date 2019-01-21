@@ -1,6 +1,6 @@
 <template>
     <div v-if="data">
-            <p> In {{year}}, {{countryName}} had ... Amenia and ... protein data</p>
+      <p> In {{year}}, {{countryName}} had ... Amenia and ... protein data</p>
     </div>
 </template>
 

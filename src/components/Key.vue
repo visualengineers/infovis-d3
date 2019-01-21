@@ -1,6 +1,6 @@
 <template>
     <div v-if="regions">
-        <label v-for="region in regions">{{region}} <input :value="region" @change="$emit('change', checkedRegions)"
+        <label v-for="region in regions">{{region}}<input :value="region" @change="$emit('change', checkedRegions)"
                                                           type="checkbox" v-model="checkedRegions"></label>
     </div>
 </template>
@@ -22,6 +22,6 @@
 
 <style scoped lang="scss">
  label {
-  display:block;
+  display: block;
 }
 </style>
