@@ -141,6 +141,7 @@ function generateDiagram(dataSet, svgId, onClickCallback) {
         .attr("y", height * 1 / 20)
         .attr("width", width * 3 / 20)
         .attr("height", height * 1 / 30)
+        .style("opacity", "0.75")
         .attr("fill", "url(#politGradient)");
 
     legend.append("text")
