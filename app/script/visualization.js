@@ -615,9 +615,9 @@ var Visualization = function () {
 
 
                 
-                var svg = d3.select('div#slider').select('svg');
+                var svg_img = d3.select('div#slider').select('svg');
 
-                var myimage = svg.append('image')
+                var myimage = svg_img.append('image')
                     .attr('xlink:href', "data/legend_bottem.jpg")
                     .attr('width', "500")
                     .attr('height', "100")
