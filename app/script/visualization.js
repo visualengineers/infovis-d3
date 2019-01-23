@@ -520,7 +520,7 @@ var Visualization = function () {
                             svg.selectAll('path')
                                 .filter(function(d) { return d.properties.continent == cont})
                                 .attr('fill',  function(d, i) {
-                                    return ColorScaleYear ('21032', DataProvider.getAverageForRegion(d.properties.subregion,"2010","21032"),year);
+                                    return ColorScaleYear ('21032', DataProvider.getAverageForRegion(d.properties.subregion,year,"21032"),year);
                                 });
                             
                             //alle Kontinente einblenden
