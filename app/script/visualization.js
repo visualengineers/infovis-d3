@@ -112,10 +112,12 @@ var Visualization = function () {
                             if (yPosCircleSidebar == 0) {
                                 yPosCircleSidebar = 30 + circleOffset[i][1];
                                 previousCircleOffset = circleOffset[i][1];
+                                circleOffset[i][2] = yPosCircleSidebar;
                                 return yPosCircleSidebar
                             }
                             yPosCircleSidebar += 80 + previousCircleOffset + circleOffset[i][1];
                             previousCircleOffset = circleOffset[i][1];
+                            circleOffset[i][2] = yPosCircleSidebar;
                             return yPosCircleSidebar;
                         } 
                         
@@ -131,6 +133,24 @@ var Visualization = function () {
                         } else if (tempData == false || tempData == undefined)
                         {
                             circlePercent = "100";
+
+                            sidebar.append("text")
+                                .attr("x", function(){
+                                    //nutzt "d" der fill funktion
+                                    if (circleOffset[i][0] == d.properties.iso_a3) {
+                                        return 30 + circleOffset[i][1]*2;
+                                    }
+                                })
+                                .attr("y", function(){
+                                    if (circleOffset[i][0] == d.properties.iso_a3) {
+                                        return 5 + circleOffset[i][2];
+                                    }
+                                })
+                                .attr("text-anchor", "middle") 
+                                .attr("font-weight", "bold")
+                                .style('fill', function(d){return circleColor;})
+                                .style("font-size", "14px")
+                                .text("n.a.");
 
                             //TODO: n.a. text not working in sidebar
 
