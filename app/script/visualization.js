@@ -612,6 +612,16 @@ var Visualization = function () {
                     .attr('transform', 'translate(' + (width-616)/2 + ',30)');
 
                 gTime.call(sliderTime);
+
+
+                
+                var svg = d3.select('div#slider').select('svg');
+
+                var myimage = svg.append('image')
+                    .attr('xlink:href', "data/legend_bottem.jpg")
+                    .attr('width', "500")
+                    .attr('height', "100")
+                    .attr('transform', 'translate('+ (width-500)/2 + ',70)');
             })
             
         }
