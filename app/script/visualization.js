@@ -154,7 +154,7 @@ var Visualization = function () {
                                         //nutzt "d" der fill funktion
                                         for (var j = 0; j<circleOffset.length;j++) {
                                             if (circleOffset[j][0] == d.properties.iso_a3) {
-                                                return 30 + circleOffset[j][1]*2;
+                                                return 30 + circleOffset[j][1];
                                             }
                                         }
                                         
