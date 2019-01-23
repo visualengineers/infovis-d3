@@ -32,7 +32,6 @@ var Visualization = function () {
                 .projection(projection);
                 var fontSize = 18;
                 var circleOffset;
-                var countryColors = {};
                 var hover = true;
                 var view = "World";
                 var cont = "";
@@ -59,27 +58,13 @@ var Visualization = function () {
                     return ColorCode;
                 }
 
-                var continentColors = [];
-                var regionColors = [];
-                var colors = ['#F23C50', '#FFCB05', '#16494F', '#4AD9D9', '#12F34A', '#E228C0'];
-
-                var dataContinent = [0,0,0,0];
-                //set colors for regions
-                DataProvider.getPreparedData().forEach(function (region, i) {
-                    var data = DataProvider.getAverageForRegion(region.Region,year,'22013');
-                    regionColors[i]=new Array(region.Region,ColorScaleYear('22013', data, year));
-                    if (region.Region.includes("Europe")) {
-                        dataContinent[0] += data;
-                    } else if (region.Region.includes("Africa")) {
-                        dataContinent[1] += data;
-                    } else if (region.Region == "Northern America") {
-                        dataContinent[2] += data;
-                    } else if (region.Region == "Southern America") {
-                        dataContinent[3] += data;
-                    }
-                });
-                for (i = 0; i<dataContinent.length;i++) {
-                    continentColors[i]=ColorScaleYear('22013', dataContinent[i], year);
+                function SizeScaleYearSidebar(code, value, year) {
+                    var myScale = d3.scalePow()
+                    .exponent(2)
+                    .domain([DataProvider.getMinValueYear(code, year).Value,DataProvider.getMaxValueYear(code, year).Value])
+                    .range([0,50]);          
+                    var ColorCode = myScale(value);
+                    return ColorCode;
                 }
 
                 function removeCountryFromList(iso_a3){
@@ -109,12 +94,12 @@ var Visualization = function () {
                         return "circleSidebar-"+d.properties.iso_a3;
                     })
                     .attr('r',function(d, i){ 
-                        circleOffset[i] = new Array(d.properties.iso_a3,SizeScaleYear('22013', DataProvider.getValuebyiso(d.properties.iso_a3,year,"22013"), year));
+                        circleOffset[i] = new Array(d.properties.iso_a3,SizeScaleYearSidebar('22013', DataProvider.getValuebyiso(d.properties.iso_a3,year,"22013"), year));
                         if (circleOffset[i][1] == false || circleOffset[i][1] == undefined || circleOffset[i][1] !== circleOffset[i][1]) {
                             circleOffset[i][1] = 0;
                         }
                         if (circleOffset[i][0] == d.properties.iso_a3) {
-                            return 20+circleOffset[i][1]; 
+                            return 15+circleOffset[i][1]; 
                         }
                     })
                     .attr('cx', function(d, i) {
@@ -357,7 +342,7 @@ var Visualization = function () {
                                 //console.log(svg);
                                 svg.append("text")
                                 .attr("x", function(d){return d3.mouse(this)[0]+40+circleOffset;})
-                                .attr("y", function(d){return d3.mouse(this)[1]-40;})
+                                .attr("y", function(d){return d3.mouse(this)[1]-40-circleOffset;})
                                 .attr("font-weight", "bold")
                                 .attr("text-anchor", "middle")
                                 .style('fill', "black")
