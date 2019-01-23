@@ -68,7 +68,11 @@ var Visualization = function () {
                 }
 
                 function removeCountryFromList(iso_a3){
-                    CompareList = CompareList.filter(region => region != iso_a3);
+                    for (var i = 0; i<CompareList.length;i++) {
+                        if (CompareList[i].includes(iso_a3)) {
+                            CompareList.splice(i,1);
+                        }
+                    }
                     drawList();
                 }
 
@@ -85,114 +89,142 @@ var Visualization = function () {
                     .data(data.features)
                     .enter()
                     .filter(function(d) {
-                        if (CompareList.includes(d.properties.iso_a3)) {
-                            return d.properties.iso_a3;
+                        for (var i = 0; i<CompareList.length;i++) {
+                            if (CompareList[i].includes(d.properties.iso_a3)) {
+                                return d.properties.iso_a3;
+                            }
                         }
                     })
                     .append('circle')
                     .attr('id', function(d) {
                         return "circleSidebar-"+d.properties.iso_a3;
                     })
-                    .attr('r',function(d, i){ 
-                        circleOffset[i] = new Array(d.properties.iso_a3,SizeScaleYearSidebar('22013', DataProvider.getValuebyiso(d.properties.iso_a3,year,"22013"), year));
-                        if (circleOffset[i][1] == false || circleOffset[i][1] == undefined || circleOffset[i][1] !== circleOffset[i][1]) {
-                            circleOffset[i][1] = 0;
-                        }
-                        if (circleOffset[i][0] == d.properties.iso_a3) {
-                            return 15+circleOffset[i][1]; 
-                        }
-                    })
-                    .attr('cx', function(d, i) {
-                        if (circleOffset[i][0] == d.properties.iso_a3) {
-                            return 30+circleOffset[i][1];
-                        } 
-                    })
-                    .attr('cy', function(d, i) {
-                        if (circleOffset[i][0] == d.properties.iso_a3) {
-                            if (yPosCircleSidebar == 0) {
-                                yPosCircleSidebar = 30 + circleOffset[i][1];
-                                previousCircleOffset = circleOffset[i][1];
-                                circleOffset[i][2] = yPosCircleSidebar;
-                                return yPosCircleSidebar
+                    .attr('r',function(d){ 
+                        for (var i = 0; i<CompareList.length;i++) {
+                            if (CompareList[i].includes(d.properties.iso_a3)) {
+                                circleOffset[i] = new Array(d.properties.iso_a3,SizeScaleYearSidebar('22013', DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"22013"), CompareList[i][1]));
+                                if (circleOffset[i][1] == false || circleOffset[i][1] == undefined || circleOffset[i][1] !== circleOffset[i][1]) {
+                                    circleOffset[i][1] = 0;
+                                }
+                                if (circleOffset[i][0] == d.properties.iso_a3) {
+                                    return 15+circleOffset[i][1]; 
+                                }
                             }
-                            yPosCircleSidebar += 80 + previousCircleOffset + circleOffset[i][1];
-                            previousCircleOffset = circleOffset[i][1];
-                            circleOffset[i][2] = yPosCircleSidebar;
-                            return yPosCircleSidebar;
-                        } 
-                        
+                        }
+                    })
+                    .attr('cx', function(d) {
+                        for (var j = 0; j<circleOffset.length;j++) {
+                            if (circleOffset[j][0] == d.properties.iso_a3) {
+                                return 30+circleOffset[j][1];
+                            }
+                        }
+                    })
+                    .attr('cy', function(d) {
+                        for (var j = 0; j<circleOffset.length;j++) {
+                            if (circleOffset[j][0] == d.properties.iso_a3) {
+                                if (yPosCircleSidebar == 0) {
+                                    yPosCircleSidebar = 30 + circleOffset[j][1];
+                                    previousCircleOffset = circleOffset[j][1];
+                                    circleOffset[j][2] = yPosCircleSidebar;
+                                    return yPosCircleSidebar
+                                }
+                                yPosCircleSidebar += 80 + previousCircleOffset + circleOffset[j][1];
+                                previousCircleOffset = circleOffset[j][1];
+                                circleOffset[j][2] = yPosCircleSidebar;
+                                return yPosCircleSidebar;
+                            }
+                        }                      
                     })
                     .attr('stroke','black')
                     .attr('fill', function(d, i) {
-                        //dynamically change color of the circle diagram
-                        var circleColor = ColorScaleYear('21032', DataProvider.getValuebyiso(d.properties.iso_a3,year,"21032"), year);
-                        var circlePercent;
-                        var tempData = DataProvider.getValuebyiso(d.properties.iso_a3,year,"210041");
-                        if (tempData == "<2.5") {
-                            circlePercent = "2.5";
-                        } else if (tempData == false || tempData == undefined)
-                        {
-                            circlePercent = "100";
+                        for (var i = 0; i<CompareList.length;i++) {
+                            if (CompareList[i].includes(d.properties.iso_a3)) {
+                                //dynamically change color of the circle diagram
+                                var circleColor = ColorScaleYear('21032', DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"21032"), CompareList[i][1]);
+                                var circlePercent;
+                                var tempData = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"210041");
+                                if (tempData == "<2.5") {
+                                    circlePercent = "2.5";
+                                } else if (tempData == false || tempData == undefined)
+                                {
+                                    circlePercent = "100";
 
-                            sidebar.append("text")
-                                .attr("x", function(){
-                                    //nutzt "d" der fill funktion
-                                    if (circleOffset[i][0] == d.properties.iso_a3) {
-                                        return 30 + circleOffset[i][1]*2;
-                                    }
-                                })
-                                .attr("y", function(){
-                                    if (circleOffset[i][0] == d.properties.iso_a3) {
-                                        return 5 + circleOffset[i][2];
-                                    }
-                                })
-                                .attr("text-anchor", "middle") 
-                                .attr("font-weight", "bold")
-                                .style('fill', function(d){return circleColor;})
-                                .style("font-size", "14px")
-                                .text("n.a.");
+                                    sidebar.append("text")
+                                    .attr("x", function(){
+                                        //nutzt "d" der fill funktion
+                                        for (var j = 0; j<circleOffset.length;j++) {
+                                            if (circleOffset[j][0] == d.properties.iso_a3) {
+                                                return 30 + circleOffset[j][1]*2;
+                                            }
+                                        }
+                                        
+                                    })
+                                    .attr("y", function(){
+                                        for (var j = 0; j<circleOffset.length;j++) {
+                                            if (circleOffset[j][0] == d.properties.iso_a3) {
+                                                return 5 + circleOffset[j][2];
+                                            }
+                                        }   
+                                    })
+                                    .attr("text-anchor", "middle") 
+                                    .attr("font-weight", "bold")
+                                    .style('fill', function(d){return circleColor;})
+                                    .style("font-size", "14px")
+                                    .text("n.a.");
 
-                            return "url(#diagonalSchraffur)";
-                        } else {
-                            circlePercent = tempData;
-                        }
-
-                        var gradSidebar = sidebar.append("defs").selectAll("linearGradient")
-                            .data(data.features)
-                            .enter()
-                            .filter(function(d) {
-                                if (CompareList.includes(d.properties.iso_a3)) {
-                                    return d.properties.iso_a3;
+                                    return "url(#diagonalSchraffur)";
+                                } else {
+                                    circlePercent = tempData;
                                 }
-                            })
-                            .append("linearGradient")
-                            .attr("id", function (d) {
-                                return "gradient-"+d.properties.iso_a3+year;
-                            })
-                            .attr("x1", "0%")
-                            .attr("x2", "0%")
-                            .attr("y1", "100%")
-                            .attr("y2", "0%");
 
-                        gradSidebar.append("stop")
-                            .attr("offset", "0%")
-                            .transition()
-                            .style("stop-color", function (d) {
-                                return ColorScaleYear('21032', DataProvider.getValuebyiso(d.properties.iso_a3,year,"21032"), year);
-                            })
-                            .attr("offset", function(d,i) {
-                                return (100-parseInt(circlePercent)) + "%";
-                            });;
+                                var gradSidebar = sidebar.append("defs").selectAll("linearGradient")
+                                    .data(data.features)
+                                    .enter()
+                                    .filter(function(d) {
+                                        for (var j = 0; j<CompareList.length;j++) {
+                                            if (CompareList[j].includes(d.properties.iso_a3)) {
+                                                return d.properties.iso_a3;
+                                            }
+                                        }
+                                    })
+                                    .append("linearGradient")
+                                    .attr("id", function (d) {
+                                        for (var j = 0; j<CompareList.length;j++) {
+                                            if (CompareList[j].includes(d.properties.iso_a3)) {
+                                                return "gradient-"+d.properties.iso_a3+CompareList[j][1];
+                                            }
+                                        }
+                                    })
+                                    .attr("x1", "0%")
+                                    .attr("x2", "0%")
+                                    .attr("y1", "100%")
+                                    .attr("y2", "0%");
 
-                        gradSidebar.append("stop")
-                            .attr("offset", "0%")
-                            .transition()
-                            .style("stop-color", "white")
-                            .attr("offset", function(d,i) {
-                                return (100-parseInt(circlePercent)) + "%";
-                            });
+                                gradSidebar.append("stop")
+                                    .attr("offset", "0%")
+                                    .transition()
+                                    .style("stop-color", function (d) {
+                                        for (var j = 0; j<CompareList.length;j++) {
+                                            if (CompareList[j].includes(d.properties.iso_a3)) {
+                                                return ColorScaleYear('21032', DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[j][1],"21032"), CompareList[j][1]);
+                                            }
+                                        }
+                                    })
+                                    .attr("offset", function(d,i) {
+                                        return (100-parseInt(circlePercent)) + "%";
+                                    });;
 
-                        return ("url(#gradient-"+d.properties.iso_a3+year+")");
+                                gradSidebar.append("stop")
+                                    .attr("offset", "0%")
+                                    .transition()
+                                    .style("stop-color", "white")
+                                    .attr("offset", function(d,i) {
+                                        return (100-parseInt(circlePercent)) + "%";
+                                    });
+
+                                return ("url(#gradient-"+d.properties.iso_a3+CompareList[i][1]+")");
+                            }
+                        }
                     })
                     .on("click", function(d, i) {
                         removeCountryFromList(d.properties.iso_a3);
@@ -202,23 +234,29 @@ var Visualization = function () {
                         .data(data.features)
                         .enter()
                         .filter(function(d) {
-                            if (CompareList.includes(d.properties.iso_a3)) {
-                                return d.properties.iso_a3;
+                            for (var i = 0; i<CompareList.length;i++) {
+                                if (CompareList[i].includes(d.properties.iso_a3)) {
+                                    return d.properties.iso_a3;
+                                }
                             }
                         })  
                         .append("foreignObject")
                         .attr("width", function (d, i) {
-                            if (circleOffset[i][0] == d.properties.iso_a3) { 
-                                return sidebarWidth-circleOffset[i][1]*2;
+                            for (var j = 0; j<circleOffset.length;j++) {
+                                if (circleOffset[j][0] == d.properties.iso_a3) {
+                                    return sidebarWidth-circleOffset[j][1]*2;
+                                }
                             }
                         })
                         .attr("height", function (d, i) {
                             return 100;
                         })
                         .attr("x", function(d, i){
-                            if (circleOffset[i][0] == d.properties.iso_a3) { 
-                                return 60+circleOffset[i][1]*2;
-                            }  
+                            for (var j = 0; j<circleOffset.length;j++) {
+                                if (circleOffset[j][0] == d.properties.iso_a3) {
+                                    return 60+circleOffset[j][1]*2;
+                                }
+                            }
                         })
                         .attr("y", function(d){
                             yPosCircleSidebar = sidebar.selectAll("circle[id='circleSidebar-"+d.properties.iso_a3+"']").attr('cy');
@@ -226,19 +264,23 @@ var Visualization = function () {
                         })
                         .append("xhtml:body")
                         .html(function(d) {
-                            var undernourishment = DataProvider.getValuebyiso(d.properties.iso_a3,year,"210041");
-                            if (undernourishment == undefined || undernourishment == "") {
-                                undernourishment = "n.a."
+                            for (var i = 0; i<CompareList.length;i++) {
+                                if (CompareList[i].includes(d.properties.iso_a3)) {
+                                    var undernourishment = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"210041");
+                                    if (undernourishment == undefined || undernourishment == "") {
+                                        undernourishment = "n.a."
+                                    }
+                                    var GDP = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"22013");
+                                    if (GDP == undefined || GDP == "") {
+                                        GDP = "n.a."
+                                    }
+                                    var politicalStability = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"21032");
+                                    if (politicalStability == undefined || politicalStability == "") {
+                                        politicalStability = "n.a."
+                                    }
+                                    return "<p><b>"+d.properties.name+"</b><br>Undernourishment: "+undernourishment+"<br>GDP: "+GDP+"<br>Political stability: "+politicalStability+"</p>";
+                                }
                             }
-                            var GDP = DataProvider.getValuebyiso(d.properties.iso_a3,year,"22013");
-                            if (GDP == undefined || GDP == "") {
-                                GDP = "n.a."
-                            }
-                            var politicalStability = DataProvider.getValuebyiso(d.properties.iso_a3,year,"21032");
-                            if (politicalStability == undefined || politicalStability == "") {
-                                politicalStability = "n.a."
-                            }
-                            return "<p><b>"+d.properties.name+"</b><br>Undernourishment: "+undernourishment+"<br>GDP: "+GDP+"<br>Political stability: "+politicalStability+"</p>";
                         })
                         .on("click", function(d, i) {
                             removeCountryFromList(d.properties.iso_a3);
@@ -448,14 +490,18 @@ var Visualization = function () {
                         //Add selected Country to List
                         if (continent == cont){
                             //and remove it, if it is in the List
-                            if (CompareList.includes(iso_a3)) {
-                                removeCountryFromList(iso_a3);
-                            }
-                            else{
-                                if (CompareList.length == 7) {
-                                    removeCountryFromList(CompareList[0]);
+                            var alreadyInList = false;
+                            for (var i = 0; i < CompareList.length; i++) {
+                                if (CompareList[i].includes(iso_a3)) {
+                                    removeCountryFromList(iso_a3);
+                                    alreadyInList = true;
                                 }
-                                CompareList.push(iso_a3);
+                            }
+                            if (alreadyInList == false) {
+                                if (CompareList.length == 7) {
+                                    removeCountryFromList(CompareList[0][0]);
+                                }
+                                CompareList[CompareList.length] = new Array(iso_a3,year);
                             }
                             console.log(CompareList);
                             drawList();
