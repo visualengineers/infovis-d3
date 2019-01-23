@@ -152,33 +152,6 @@ var Visualization = function () {
                                 .style("font-size", "14px")
                                 .text("n.a.");
 
-                            //TODO: n.a. text not working in sidebar
-
-                            /*sidebar.selectAll("text")
-                                .data(data.features)
-                                .enter()
-                                .filter(function(d) {
-                                    if (CompareList.includes(d.properties.iso_a3) && (DataProvider.getValuebyiso(d.properties.iso_a3,year,"210041") == false || DataProvider.getValuebyiso(d.properties.iso_a3,year,"210041") == undefined)) {
-                                        return d.properties.iso_a3;
-                                    }
-                                })  
-                                .append("text")
-                                .attr("x", function(d, i){
-                                    if (circleOffset[i][0] == d.properties.iso_a3) { 
-                                        return 30+circleOffset[i][1];
-                                    }
-                                })
-                                .attr("y", function(d){
-                                    var yPosCircleSidebar = sidebar.selectAll("circle[id='circleSidebar-"+d.properties.iso_a3+"']").attr('cy');
-                                    console.log(yPosCircleSidebar);
-                                    return yPosCircleSidebar+5;
-                                })
-                                .attr("text-anchor", "middle") 
-                                .attr("font-weight", "bold")
-                                .style('fill', function(d){return circleColor;})
-                                .style("font-size", "18px")
-                                .text("n.a.");*/
-
                             return "url(#diagonalSchraffur)";
                         } else {
                             circlePercent = tempData;
