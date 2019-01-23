@@ -174,7 +174,7 @@ var Visualization = function () {
                             })
                             .append("linearGradient")
                             .attr("id", function (d) {
-                                return "gradient-"+d.properties.iso_a3;
+                                return "gradient-"+d.properties.iso_a3+year;
                             })
                             .attr("x1", "0%")
                             .attr("x2", "0%")
@@ -199,7 +199,7 @@ var Visualization = function () {
                                 return (100-parseInt(circlePercent)) + "%";
                             });
 
-                        return ("url(#gradient-"+d.properties.iso_a3+")");
+                        return ("url(#gradient-"+d.properties.iso_a3+year+")");
                     })
                     .on("click", function(d, i) {
                         removeCountryFromList(d.properties.iso_a3);
@@ -230,7 +230,19 @@ var Visualization = function () {
                         })
                         .append("xhtml:body")
                         .html(function(d) {
-                            return "<p><b>"+d.properties.name+"</b><br>Undernourishment: "+DataProvider.getValuebyiso(d.properties.iso_a3,year,"210041")+"<br>GDP: "+DataProvider.getValuebyiso(d.properties.iso_a3,year,"22013")+"<br>Political stability: "+DataProvider.getValuebyiso(d.properties.iso_a3,year,"21032")+"</p>";
+                            var undernourishment = DataProvider.getValuebyiso(d.properties.iso_a3,year,"210041");
+                            if (undernourishment == undefined || undernourishment == "") {
+                                undernourishment = "n.a."
+                            }
+                            var GDP = DataProvider.getValuebyiso(d.properties.iso_a3,year,"22013");
+                            if (GDP == undefined || GDP == "") {
+                                GDP = "n.a."
+                            }
+                            var politicalStability = DataProvider.getValuebyiso(d.properties.iso_a3,year,"21032");
+                            if (politicalStability == undefined || politicalStability == "") {
+                                politicalStability = "n.a."
+                            }
+                            return "<p><b>"+d.properties.name+"</b><br>Undernourishment: "+undernourishment+"<br>GDP: "+GDP+"<br>Political stability: "+politicalStability+"</p>";
                         })
                         .on("click", function(d, i) {
                             removeCountryFromList(d.properties.iso_a3);
