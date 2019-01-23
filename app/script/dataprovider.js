@@ -98,6 +98,29 @@ var DataProvider = function () {
             return getValueResult;
         },
         /**
+         * Get a value from the data.
+         * @param {string} country - The country in the data in iso_a3 form.
+         * @param {number} year - The year of the parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @return {number} The desired value in the data.
+        */
+        getValuebyiso: function(country, year, code) {
+            var getValueResult;
+
+            if (code == 210041) {
+                var yearInt = parseInt(year,10);
+                year = year + "-" + (yearInt+2);
+            }
+
+            _data.some(function (item) {
+                if (item['iso_a3'] === country && item['Year'] === year && item['Item Code'] === code) {
+                    getValueResult = item['Value'];
+                    return true;
+                }
+            });
+            return getValueResult;
+        },
+        /**
          * Retrieve maximum value for a given parameter.
          * @param {number} code - The numerical code of the parameter (see data source documentation).
          * @return {Object} Result containing value, year, and country.
@@ -121,6 +144,79 @@ var DataProvider = function () {
             };
         },
         /**
+         * Retrieve minimum value for a given parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @return {Object} Result containing value, year, and country.
+         */
+        getMinValue: function (code) {
+            var resultMin = 0;
+            var country = 'unknown';
+            var year = 'unknown';
+            _data.forEach(function (item) {
+                var currentValue = Number.parseFloat(item['Value']);
+                if (item['Item Code'] === code && currentValue < resultMin) {
+                    resultMin = currentValue;
+                    country = item['Area'];
+                    year = item['Year'];
+                }
+            });
+            return {
+                "Value": resultMin,
+                "Year": year,
+                "Country": country
+            };
+        },
+        /**
+         * Retrieve maximum value for a given parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @param {number} yearLookUp - The year of the parameter.
+         * @return {Object} Result containing value, year, and country.
+         */
+        getMaxValueYear: function (code, yearLookUp) {
+            var resultMax = 0;
+            var country = 'unknown';
+            var year = 'unknown';
+            _data.forEach(function (item) {
+                var currentValue = Number.parseFloat(item['Value']);
+                if (item['Item Code'] === code && item['Year'] === yearLookUp && resultMax < currentValue) {
+                    resultMax = currentValue;
+                    country = item['Area'];
+                    year = item['Year'];
+                }
+            });
+            //console.log("MAX VALUE "+resultMax);
+            return {
+                "Value": resultMax,
+                "Year": year,
+                "Country": country
+            };
+        },
+        /**
+         * Retrieve minimum value for a given parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @param {number} yearLookUp - The year of the parameter.
+         * @return {Object} Result containing value, year, and country.
+         */
+        getMinValueYear: function (code, yearLookUp) {
+            var resultMin = 100000;
+            var country = 'unknown';
+            var year = 'unknown';
+            _data.forEach(function (item) {
+                var currentValue = Number.parseFloat(item['Value']);
+                if (item['Item Code'] === code && item['Year'] === yearLookUp &&  currentValue < resultMin) {
+                    resultMin = currentValue;
+                    country = item['Area'];
+                    year = item['Year'];
+                }
+            });
+            //console.log("MIN VALUE "+resultMin);
+            return {
+                "Value": resultMin,
+                "Year": year,
+                "Country": country
+            };
+        },
+        /**
          * Computes the average for a region of a specific parameter of a given year
          * @param {string} region - The region in the data.
          * @param {number} year - The year of the parameter.
@@ -131,7 +227,26 @@ var DataProvider = function () {
             var sumAverage = 0;
             var countAverage = 0;
             _data.forEach(function (item) {
-                if (item['Region'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
+                if (item['subregion'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
+                    sumAverage += Number.parseFloat(item['Value']);
+                    countAverage++;
+                }
+            });
+            return sumAverage / countAverage;
+        },
+        /**
+         * Computes the average for a continent of a specific parameter of a given year
+         * @param {string} continent - The continent in the data.
+         * @param {number} year - The year of the parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @return {number} The average value.
+         */
+        getAverageForContinent: function (continent, year, code) {
+            var sumAverage = 0;
+            var countAverage = 0;
+            console.log(continent);
+            _data.forEach(function (item) {
+                if (item['continent'] === continent && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
                     sumAverage += Number.parseFloat(item['Value']);
                     countAverage++;
                 }

@@ -10,9 +10,24 @@
   <script src="script/dataprovider.js"></script>
   <script src="script/visualization.js"></script>
   <script src="script/helper.js"></script>
+  <script src="https://unpkg.com/d3-simple-slider/build/d3-simple-slider.js"></script>
   </script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="container">
+    <div class="svg_container">
+      <svg></svg>
+    </div>
+
+    <div class="sidebar_container">
+      <svg></svg>
+    </div>
+
+    <div class="slider_container">
+      <div id="slider"></div>
+    </div>
+  </div>
 
   <script>
     window.onload = function () {
@@ -22,6 +37,5 @@
       });
     };    
   </script>
-
 </body>
 </html>

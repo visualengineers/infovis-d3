@@ -1,0 +1,33 @@
+
+body {                
+    margin:0;position:fixed;top:0;right:0;bottom:0;left:0; 
+    font-family: Open Sans;
+    font-weight: 300;
+}
+svg { 
+    width:100%; height: 100%; 
+}
+
+
+.container{
+    width: 100%;
+    height: 100%;
+    display:grid;
+    grid-template-columns: 5fr 1fr;
+    grid-template-rows: 5fr 1fr;
+    grid-template-areas:
+        "map"  "sidebar"
+        "slider" "sidebar";
+}
+
+.slider_container{
+    grid-area: "slider";
+}
+
+.svg_container{
+    grid-area: "map";
+}
+
+.sidebar_container{
+    grid-area: "sidebar";
+}
