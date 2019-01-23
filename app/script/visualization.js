@@ -219,6 +219,9 @@ var Visualization = function () {
                                 return sidebarWidth-circleOffset[i][1]*2;
                             }
                         })
+                        .attr("height", function (d, i) {
+                            return 100;
+                        })
                         .attr("x", function(d, i){
                             if (circleOffset[i][0] == d.properties.iso_a3) { 
                                 return 60+circleOffset[i][1]*2;
