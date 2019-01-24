@@ -93,8 +93,7 @@
         .filter(d =>
           d.values.some(v => v['Item Code'] === this.anemiaCode)
           && d.values.some(v => v['Item Code'] === this.proteinCode)
-          && d.values.some(v => v['Item Code'] === this.gdpCode)
-          && this.selectedRegions!.includes(d.region),
+          && d.values.some(v => v['Item Code'] === this.gdpCode),
         ).sort( (a, b) => {
           const aGDP = Number.parseFloat(a.values.find(v => v['Item Code'] === this.gdpCode)!.Value);
           const bGDP = Number.parseFloat(b.values.find(v => v['Item Code'] === this.gdpCode)!.Value);

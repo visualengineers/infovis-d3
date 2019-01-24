@@ -103,6 +103,7 @@ export default class Diagram extends Vue {
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
         .attr('fill', d => this.regionColorScale!(d.region))
+        .attr('opacity', d => this.selectedRegions!.includes(d.region) ? 1.0 : 0.1)
         .attr('stroke', '#aaa')
         .on('click', d => this.$emit('areaSelected', d.area));
 
@@ -118,6 +119,7 @@ export default class Diagram extends Vue {
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
         .attr('fill', d => this.regionColorScale!(d.region));
+        .attr('opacity', d => this.selectedRegions!.includes(d.region) ? 1.0 : 0.1)
 
       circles.exit().remove();
     }
