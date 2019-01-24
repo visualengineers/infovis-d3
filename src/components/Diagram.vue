@@ -73,7 +73,7 @@ export default class Diagram extends Vue {
         .attr('y', this.height - 20)
         .attr('x', 50)
         .style('font-size', '10px');
- 
+
       svgGroup.append('g')
         .call(d3.axisBottom(this.anemiaScale))
         .attr('transform', 'translate(0, ' + (this.height - this.padding) + ')');
@@ -103,6 +103,7 @@ export default class Diagram extends Vue {
         .attr('cy', d =>
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
+        .attr('opacity', d => this.selectedRegions!.includes(d.region) ? 1.0 : 0.1)
         .attr('fill', d => this.colorScale!(d.region))
         .attr('stroke', '#aaa')
         .on('click', d => this.$emit('areaSelected', d.area));
@@ -118,6 +119,7 @@ export default class Diagram extends Vue {
         .attr('cy', d =>
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
+        .attr('opacity', d => this.selectedRegions!.includes(d.region) ? 1.0 : 0.1)
         .attr('fill', d => this.colorScale!(d.region));
 
       circles.exit().remove();
