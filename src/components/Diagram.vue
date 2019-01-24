@@ -118,8 +118,8 @@ export default class Diagram extends Vue {
         .attr('cy', d =>
           this.proteinScale!(Number.parseInt(d.values.find(v => v['Item Code'] === this.proteinCode)!.Value, 10)),
         )
-        .attr('fill', d => this.regionColorScale!(d.region));
-        .attr('opacity', d => this.selectedRegions!.includes(d.region) ? 1.0 : 0.1)
+        .attr('fill', d => this.regionColorScale!(d.region))
+        .attr('opacity', d => this.selectedRegions!.includes(d.region) ? 1.0 : 0.1);
 
       circles.exit().remove();
     }
