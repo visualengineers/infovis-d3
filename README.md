@@ -1,6 +1,25 @@
 # infovis-d3
 
-Example project for working with D3 and Node.
+## requirements:
+* nodejs
+* npm
+
+## project setup
+```
+npm i
+```
+
+## dev-server
+```
+npm run start 
+```
+on http://localhost:4200
+
+## build
+```
+npm run build
+```
+
 
 ## Data Source
 
