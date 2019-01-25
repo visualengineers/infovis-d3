@@ -12,44 +12,6 @@ export class DataProvider {
   }
 
   /**
-   * Load data.
-   */
-  public static async loadJSON(): Promise<DataProvider> {
-    const data = (await (await fetch(this.fileName)).json() as Array<(DataPoint & { Year: string })>)
-      .map(d => ({ ...d, Year: Number.parseInt(d.Year, 10) }));
-    const preparedData = DataProvider.prepareData(data);
-
-    return new DataProvider(data, preparedData);
-  }
-
-  private static unique<V>(data: V[]): V[] {
-    return [...new Set(data)];
-  }
-
-  /**
-   * Prepare hierarchical data structure with Regions, Areas, and Years.
-   * @return {Object} The hierarchically prepared data.
-   */
-  private static prepareData(originalData: DataPoint[]): DataGroup[] {
-    return Array.from(originalData.reduce((regions, dataPoint) => {
-      const areas = regions.get(dataPoint.Region) || new Map();
-      const years = areas.get(dataPoint.Area) || new Map();
-      const props = years.get(dataPoint.Year) || [];
-
-      return regions.set(dataPoint.Region,
-        areas.set(dataPoint.Area,
-          years.set(dataPoint.Year,
-            props.concat(dataPoint))));
-      }, new Map<string, Map<string, Map<number, DataPoint[]>>>()))
-      .reduce((acc, [region, areas]) =>
-          acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>
-              acc1.concat(...Array.from(years)
-                .reduce((acc2, [year, values]) => acc2.concat({ year, area, region, values }), [] as DataGroup[])),
-            [] as DataGroup[])),
-        [] as DataGroup[]);
-  }
-
-  /**
    * Get a value from the data.
    * @param {string} area - The country in the data.
    * @param {number} year - The year of the parameter.
@@ -116,5 +78,43 @@ export class DataProvider {
 
     return filteredData.map(({ Value }) =>
       Number.parseFloat(Value)).reduce((sum, val) => sum + val) / filteredData.length;
+  }
+
+  /**
+   * Load data.
+   */
+  public static async loadJSON(): Promise<DataProvider> {
+    const data = (await (await fetch(this.fileName)).json() as Array<(DataPoint & { Year: string })>)
+      .map(d => ({ ...d, Year: Number.parseInt(d.Year, 10) }));
+    const preparedData = DataProvider.prepareData(data);
+
+    return new DataProvider(data, preparedData);
+  }
+
+  private static unique<V>(data: V[]): V[] {
+    return [...new Set(data)];
+  }
+
+  /**
+   * Prepare hierarchical data structure with Regions, Areas, and Years.
+   * @return {Object} The hierarchically prepared data.
+   */
+  private static prepareData(originalData: DataPoint[]): DataGroup[] {
+    return Array.from(originalData.reduce((regions, dataPoint) => {
+      const areas = regions.get(dataPoint.Region) || new Map();
+      const years = areas.get(dataPoint.Area) || new Map();
+      const props = years.get(dataPoint.Year) || [];
+
+      return regions.set(dataPoint.Region,
+        areas.set(dataPoint.Area,
+          years.set(dataPoint.Year,
+            props.concat(dataPoint))));
+      }, new Map<string, Map<string, Map<number, DataPoint[]>>>()))
+      .reduce((acc, [region, areas]) =>
+          acc.concat(...Array.from(areas).reduce((acc1, [area, years]) =>
+              acc1.concat(...Array.from(years)
+                .reduce((acc2, [year, values]) => acc2.concat({ year, area, region, values }), [] as DataGroup[])),
+            [] as DataGroup[])),
+        [] as DataGroup[]);
   }
 }
