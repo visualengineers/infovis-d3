@@ -1,17 +1,15 @@
 <template>
-    <div v-if="data">   
-    <b-jumbotron >
+    <b-jumbotron > 
+    <div v-if="data"> 
       <h2> {{countryName}}, {{year}} </h2>
       <p> Prevalence of anemia: {{anemia}}% </p>
       <p> Protein intake: {{proteinIntake}} (g/cap/day) </p>
       <p> GDP: {{gdp}} (Trumps$) </p>
-    </b-jumbotron>
     </div>
     <div v-else>
-       <b-jumbotron >
       <p> Pick the country and slide the year to see more cool stuffs </p>
-    </b-jumbotron>
   </div>
+    </b-jumbotron>
 </template>
 
 <script lang="ts">
