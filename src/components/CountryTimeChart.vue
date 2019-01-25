@@ -26,29 +26,25 @@
     public data?: DataGroup[];
     public years?: number[];
 
-    private yearScale: d3.ScaleLinear<number, number> | null = null;
-    private anemiaScale: d3.ScaleLinear<number, number> | null = null;
-    private gdpScale: d3.ScaleLinear<number, number> | null = null;
-
     @Watch('data')
     @Watch('yearRange')
     public createSVG() {
       if (this.data && this.years) {
-        this.yearScale = d3.scaleLinear()
-          .domain([Math.min(...this.years), Math.max(...this.years)])
+        const yearScale = d3.scaleTime()
+          .domain([new Date(Math.min(...this.years), 0, 0), new Date(Math.max(...this.years), 0, 0)])
           .range([CountryTimeChart.PADDING, CountryTimeChart.WIDTH - CountryTimeChart.PADDING]);
 
         const anemiaValues = this.data
           .flatMap(d => d.values.filter(p => p['Item Code'] === ItemCodes.ANEMIA_CODE))
           .map(p => Number.parseFloat(p.Value));
-        this.anemiaScale = d3.scaleLinear()
+        const anemiaScale = d3.scaleLinear()
           .domain([Math.min(...anemiaValues), Math.max(...anemiaValues)])
           .range([CountryTimeChart.HEIGHT - CountryTimeChart.PADDING, CountryTimeChart.PADDING]);
 
         const gdpValues = this.data
           .flatMap(d => d.values.filter(p => p['Item Code'] === ItemCodes.GDP_CODE))
           .map(p => Number.parseFloat(p.Value));
-        this.gdpScale = d3.scaleLinear()
+        const gdpScale = d3.scaleLinear()
           .domain([Math.min(...gdpValues), Math.max(...gdpValues)])
           .range([CountryTimeChart.HEIGHT - CountryTimeChart.PADDING, CountryTimeChart.PADDING]);
 
@@ -61,15 +57,15 @@
         const svgGroup = svg.append('g');
 
         svgGroup.append('g')
-          .call(d3.axisLeft(this.anemiaScale))
+          .call(d3.axisLeft(anemiaScale))
           .attr('transform', `translate(${CountryTimeChart.PADDING}, 0)`)
           .style('color', '#F55');
         svgGroup.append('g')
-          .call(d3.axisRight(this.gdpScale))
+          .call(d3.axisRight(gdpScale))
           .attr('transform', `translate(${CountryTimeChart.WIDTH - CountryTimeChart.PADDING}, 0)`)
           .style('color', '#55F');
         svgGroup.append('g')
-          .call(d3.axisBottom(this.yearScale))
+          .call(d3.axisBottom(yearScale))
           .attr('transform', `translate(0, ${CountryTimeChart.HEIGHT - CountryTimeChart.PADDING})`);
 
         svgGroup.append('text')
@@ -79,7 +75,7 @@
           .style('font-size', '10px');
 
         svgGroup.append('text')
-          .text('Prevalence of anemia among women of reproductive age (15-49 years)')
+          .text('Prevalence of anemia')
           .attr('transform', `translate(15, ${CountryTimeChart.HEIGHT - CountryTimeChart.PADDING}),rotate(-90)`)
           .style('font-size', '10px');
 
@@ -90,11 +86,11 @@
           .style('font-size', '10px');
 
         const anemiaLine = d3.line<DataPoint>()
-          .x(d => this.yearScale(d.Year))
-          .y(d => this.anemiaScale(Number.parseFloat(d.Value)));
+          .x(d => yearScale(new Date(d.Year, 0, 0)))
+          .y(d => anemiaScale(Number.parseFloat(d.Value)));
         const gdpLine = d3.line<DataPoint>()
-          .x(d => this.yearScale(d.Year))
-          .y(d => this.gdpScale(Number.parseFloat(d.Value)));
+          .x(d => yearScale(new Date(d.Year, 0, 0)))
+          .y(d => gdpScale(Number.parseFloat(d.Value)));
 
         svgGroup.append('path')
           .datum(this.data.flatMap(d => d.values.filter(p => p['Item Code'] === ItemCodes.ANEMIA_CODE)) as DataPoint[])
