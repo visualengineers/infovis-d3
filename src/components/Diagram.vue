@@ -29,7 +29,7 @@ export default class Diagram extends Vue {
   private diagramDomain?: DiagramDomain;
   private regionColorScale?: d3.ScaleOrdinal<string, string>;
 
-  private width = 1000;
+  private width = 800;
   private height = 500;
   private padding = 50;
 
