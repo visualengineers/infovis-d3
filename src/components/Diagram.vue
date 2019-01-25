@@ -17,8 +17,8 @@
     props: {
       data: Array as new () => DataGroup[],
       selectedRegions: Array as new () => string[],
-      diagramDomain: Object as () => DiagramDomain,
-      regionColorScale: Function as () => d3.ScaleOrdinal<string, string>,
+      diagramDomain: Object as unknown as new () => DiagramDomain,
+      regionColorScale: Function as unknown as new () => d3.ScaleOrdinal<string, string>,
     },
   })
   export default class Diagram extends Vue {
