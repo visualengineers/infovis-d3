@@ -1,5 +1,5 @@
 <template>
-    <b-jumbotron > 
+  <b-jumbotron > 
     <div v-if="data"> 
       <h2> {{countryName}}, {{year}} </h2>
       <p> Prevalence of anemia: {{anemia}}% </p>
@@ -8,8 +8,8 @@
     </div>
     <div v-else>
       <p> Pick the country and slide the year to see more cool stuffs </p>
-  </div>
-    </b-jumbotron>
+    </div>
+  </b-jumbotron>
 </template>
 
 <script lang="ts">
@@ -26,21 +26,21 @@
     public data?: DataGroup;
 
     get anemia(): string | null {
-      if(!this.data){
+      if (!this.data) {
         return null;
       }
       return this.data.values.find(v => v['Item Code'] === '21043')!.Value;
     }
 
     get proteinIntake(): string | null {
-      if(!this.data){
+      if (!this.data) {
         return null;
       }
       return this.data.values.find(v => v['Item Code'] === '21013')!.Value;
     }
 
     get gdp(): string | null {
-      if(!this.data){
+      if (!this.data) {
         return null;
       }
       return this.data.values.find(v => v['Item Code'] === '22013')!.Value;
@@ -50,7 +50,6 @@
       if (!this.data) {
         return null;
       }
-
       return this.data.area;
     }
 
@@ -58,13 +57,9 @@
       if (!this.data) {
         return null;
       }
-
       return this.data.year;
     }
   }
 </script>
-
 <style scoped lang="scss">
-
-  
 </style>
