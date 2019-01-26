@@ -80,69 +80,44 @@ var Visualization = function () {
                     var previousCircleOffset = 0;
                     var yPosCircleSidebar = 0;
                     var circleOffset = [];
-
+                    var i;
                     sidebar.selectAll('circle').remove();
                     sidebar.selectAll("foreignObject").remove();
                     sidebar.selectAll('text').remove();
 
-                    sidebar.selectAll("circle")
-                    .data(data.features)
-                    .enter()
-                    .filter(function(d) {
-                        for (var i = 0; i<CompareList.length;i++) {
-                            if (CompareList[i].includes(d.properties.iso_a3)) {
-                                return d.properties.iso_a3;
-                            }
-                        }
-                    })
-                    .append('circle')
-                    .attr('id', function(d) {
-                        return "circleSidebar-"+d.properties.iso_a3;
-                    })
-                    .attr('r',function(d){ 
-                        for (var i = 0; i<CompareList.length;i++) {
-                            if (CompareList[i].includes(d.properties.iso_a3)) {
-                                circleOffset[i] = new Array(d.properties.iso_a3,SizeScaleYearSidebar('22013', DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"22013"), CompareList[i][1]));
+                    for (i=0; i<CompareList.length;i++) {
+                        sidebar.append('circle')
+                            .attr('id', function(d) {
+                                return "circleSidebar-"+CompareList[i][0];
+                            })
+                            .attr('r',function(d){ 
+                                circleOffset[i] = new Array(CompareList[i][0],SizeScaleYearSidebar('22013', DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"22013"), CompareList[i][1]));
                                 if (circleOffset[i][1] == false || circleOffset[i][1] == undefined || circleOffset[i][1] !== circleOffset[i][1]) {
                                     circleOffset[i][1] = 0;
                                 }
-                                if (circleOffset[i][0] == d.properties.iso_a3) {
-                                    return 15+circleOffset[i][1]; 
-                                }
-                            }
-                        }
-                    })
-                    .attr('cx', function(d) {
-                        for (var j = 0; j<circleOffset.length;j++) {
-                            if (circleOffset[j][0] == d.properties.iso_a3) {
-                                return 30+circleOffset[j][1];
-                            }
-                        }
-                    })
-                    .attr('cy', function(d) {
-                        for (var j = 0; j<circleOffset.length;j++) {
-                            if (circleOffset[j][0] == d.properties.iso_a3) {
+                                return 15+circleOffset[i][1]; 
+                            })
+                            .attr('cx', function(d) {
+                                return 30+circleOffset[i][1];
+                            })
+                            .attr('cy', function(d) {
                                 if (yPosCircleSidebar == 0) {
-                                    yPosCircleSidebar = 30 + circleOffset[j][1];
-                                    previousCircleOffset = circleOffset[j][1];
-                                    circleOffset[j][2] = yPosCircleSidebar;
+                                    yPosCircleSidebar = 30 + circleOffset[i][1];
+                                    previousCircleOffset = circleOffset[i][1];
+                                    circleOffset[i][2] = yPosCircleSidebar;
                                     return yPosCircleSidebar
                                 }
-                                yPosCircleSidebar += 80 + previousCircleOffset + circleOffset[j][1];
-                                previousCircleOffset = circleOffset[j][1];
-                                circleOffset[j][2] = yPosCircleSidebar;
-                                return yPosCircleSidebar;
-                            }
-                        }                      
-                    })
-                    .attr('stroke','black')
-                    .attr('fill', function(d, i) {
-                        for (var i = 0; i<CompareList.length;i++) {
-                            if (CompareList[i].includes(d.properties.iso_a3)) {
+                                yPosCircleSidebar += 80 + previousCircleOffset + circleOffset[i][1];
+                                previousCircleOffset = circleOffset[i][1];
+                                circleOffset[i][2] = yPosCircleSidebar;
+                                return yPosCircleSidebar;                      
+                            })
+                            .attr('stroke','black')
+                            .attr('fill', function(d) {
                                 //dynamically change color of the circle diagram
-                                var circleColor = ColorScaleYear('21032', DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"21032"), CompareList[i][1]);
+                                var circleColor = ColorScaleYear('21032', DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"21032"), CompareList[i][1]);
                                 var circlePercent;
-                                var tempData = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"210041");
+                                var tempData = DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"210041");
                                 if (tempData == "<2.5") {
                                     circlePercent = "2.5";
                                 } else if (tempData == false || tempData == undefined)
@@ -152,19 +127,10 @@ var Visualization = function () {
                                     sidebar.append("text")
                                     .attr("x", function(){
                                         //nutzt "d" der fill funktion
-                                        for (var j = 0; j<circleOffset.length;j++) {
-                                            if (circleOffset[j][0] == d.properties.iso_a3) {
-                                                return 30 + circleOffset[j][1];
-                                            }
-                                        }
-                                        
+                                        return 30 + circleOffset[i][1];                                  
                                     })
                                     .attr("y", function(){
-                                        for (var j = 0; j<circleOffset.length;j++) {
-                                            if (circleOffset[j][0] == d.properties.iso_a3) {
-                                                return 5 + circleOffset[j][2];
-                                            }
-                                        }   
+                                        return 5 + circleOffset[i][2];
                                     })
                                     .attr("text-anchor", "middle") 
                                     .attr("font-weight", "bold")
@@ -177,23 +143,10 @@ var Visualization = function () {
                                     circlePercent = tempData;
                                 }
 
-                                var gradSidebar = sidebar.append("defs").selectAll("linearGradient")
-                                    .data(data.features)
-                                    .enter()
-                                    .filter(function(d) {
-                                        for (var j = 0; j<CompareList.length;j++) {
-                                            if (CompareList[j].includes(d.properties.iso_a3)) {
-                                                return d.properties.iso_a3;
-                                            }
-                                        }
-                                    })
+                                var gradSidebar = sidebar.append("defs")
                                     .append("linearGradient")
                                     .attr("id", function (d) {
-                                        for (var j = 0; j<CompareList.length;j++) {
-                                            if (CompareList[j].includes(d.properties.iso_a3)) {
-                                                return "gradient-"+d.properties.iso_a3+CompareList[j][1];
-                                            }
-                                        }
+                                        return "gradient-"+CompareList[i][0]+CompareList[i][1];
                                     })
                                     .attr("x1", "0%")
                                     .attr("x2", "0%")
@@ -204,13 +157,9 @@ var Visualization = function () {
                                     .attr("offset", "0%")
                                     .transition()
                                     .style("stop-color", function (d) {
-                                        for (var j = 0; j<CompareList.length;j++) {
-                                            if (CompareList[j].includes(d.properties.iso_a3)) {
-                                                return ColorScaleYear('21032', DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[j][1],"21032"), CompareList[j][1]);
-                                            }
-                                        }
+                                        return ColorScaleYear('21032', DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"21032"), CompareList[i][1]);
                                     })
-                                    .attr("offset", function(d,i) {
+                                    .attr("offset", function(d) {
                                         return (100-parseInt(circlePercent)) + "%";
                                     });;
 
@@ -218,74 +167,58 @@ var Visualization = function () {
                                     .attr("offset", "0%")
                                     .transition()
                                     .style("stop-color", "white")
-                                    .attr("offset", function(d,i) {
+                                    .attr("offset", function(d) {
                                         return (100-parseInt(circlePercent)) + "%";
                                     });
 
-                                return ("url(#gradient-"+d.properties.iso_a3+CompareList[i][1]+")");
-                            }
-                        }
-                    })
-                    .on("click", function(d, i) {
-                        removeCountryFromList(d.properties.iso_a3);
-                    });
+                                return ("url(#gradient-"+CompareList[i][0]+CompareList[i][1]+")");
+                            })
+                            .on("click", function(d, i) {
+                                removeCountryFromList(CompareList[i][0]);
+                            });
 
-                    sidebar.selectAll("foreignObject")
-                        .data(data.features)
-                        .enter()
-                        .filter(function(d) {
-                            for (var i = 0; i<CompareList.length;i++) {
+                        sidebar.selectAll("foreignObject")
+                            .data(data.features)
+                            .enter()
+                            .filter(function(d) {
                                 if (CompareList[i].includes(d.properties.iso_a3)) {
                                     return d.properties.iso_a3;
                                 }
-                            }
-                        })  
-                        .append("foreignObject")
-                        .attr("width", function (d, i) {
-                            for (var j = 0; j<circleOffset.length;j++) {
-                                if (circleOffset[j][0] == d.properties.iso_a3) {
-                                    return sidebarWidth-circleOffset[j][1]*2;
+                            })  
+                            .append("foreignObject")
+                            .attr("width", function (d) {
+                                return sidebarWidth-circleOffset[i][1]*2;
+                            })
+                            .attr("height", function (d) {
+                                return 100;
+                            })
+                            .attr("x", function(d){
+                                return 60+circleOffset[i][1]*2;
+                            })
+                            .attr("y", function(d){
+                                //yPosCircleSidebar = sidebar.selectAll("circle[id='circleSidebar-"+CompareList[i][0]+"']").attr('cy');
+                                return circleOffset[i][2]-(2.5*fontSize);
+                            })
+                            .append("xhtml:body")
+                            .html(function(d) {
+                                var undernourishment = DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"210041");
+                                if (undernourishment == undefined || undernourishment == "") {
+                                    undernourishment = "n.a."
                                 }
-                            }
-                        })
-                        .attr("height", function (d, i) {
-                            return 100;
-                        })
-                        .attr("x", function(d, i){
-                            for (var j = 0; j<circleOffset.length;j++) {
-                                if (circleOffset[j][0] == d.properties.iso_a3) {
-                                    return 60+circleOffset[j][1]*2;
+                                var GDP = DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"22013");
+                                if (GDP == undefined || GDP == "") {
+                                    GDP = "n.a."
                                 }
-                            }
-                        })
-                        .attr("y", function(d){
-                            yPosCircleSidebar = sidebar.selectAll("circle[id='circleSidebar-"+d.properties.iso_a3+"']").attr('cy');
-                            return yPosCircleSidebar-(2.5*fontSize);
-                        })
-                        .append("xhtml:body")
-                        .html(function(d) {
-                            for (var i = 0; i<CompareList.length;i++) {
-                                if (CompareList[i].includes(d.properties.iso_a3)) {
-                                    var undernourishment = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"210041");
-                                    if (undernourishment == undefined || undernourishment == "") {
-                                        undernourishment = "n.a."
-                                    }
-                                    var GDP = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"22013");
-                                    if (GDP == undefined || GDP == "") {
-                                        GDP = "n.a."
-                                    }
-                                    var politicalStability = DataProvider.getValuebyiso(d.properties.iso_a3,CompareList[i][1],"21032");
-                                    if (politicalStability == undefined || politicalStability == "") {
-                                        politicalStability = "n.a."
-                                    }
-                                    return "<p><b>"+d.properties.name+" ("+CompareList[i][1]+")</b><br>Undernourishment: "+undernourishment+"<br>GDP: "+GDP+"<br>Political stability: "+politicalStability+"</p>";
+                                var politicalStability = DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"21032");
+                                if (politicalStability == undefined || politicalStability == "") {
+                                    politicalStability = "n.a."
                                 }
-                            }
-                        })
-                        .on("click", function(d, i) {
-                            removeCountryFromList(d.properties.iso_a3);
-                        });
-                    
+                                return "<p><b>"+d.properties.name+" ("+CompareList[i][1]+")</b><br>Undernourishment: "+undernourishment+"<br>GDP: "+GDP+"<br>Political stability: "+politicalStability+"</p>";
+                            })
+                            .on("click", function(d) {
+                                removeCountryFromList(CompareList[i][0]);
+                            });
+                    }
                 }
                     
                 function handleMouseOver(continent, country) {
@@ -492,7 +425,7 @@ var Visualization = function () {
                             //and remove it, if it is in the List
                             var alreadyInList = false;
                             for (var i = 0; i < CompareList.length; i++) {
-                                if (CompareList[i].includes(iso_a3)) {
+                                if (CompareList[i][0] == iso_a3 && CompareList[i][1] == year) {
                                     removeCountryFromList(iso_a3);
                                     alreadyInList = true;
                                 }
