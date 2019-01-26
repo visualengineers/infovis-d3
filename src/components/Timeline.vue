@@ -1,8 +1,8 @@
 <template>
-    <div v-if="years">
+    <b-col cols="7" offset="2" v-if="years">
         <label>{{value}} <input :max="maxYear" :min="minYear"
-                                @change="$emit('change', Number.parseInt($event.target.value, 10))" step="1" type="range" v-model="value"></label>
-    </div>
+                                @input="$emit('change', Number.parseInt($event.target.value, 10))" step="1" type="range" v-model="value"></label>
+    </b-col>
 </template>
 
 <script lang="ts">
@@ -42,5 +42,7 @@
 </script>
 
 <style scoped lang="scss">
-  
+  input, label {
+      width: 100%;
+  }
 </style>
