@@ -71,6 +71,7 @@ var Visualization = function () {
                     for (var i = 0; i<CompareList.length;i++) {
                         if (CompareList[i][0] == iso_a3 && CompareList[i][1] == year) {
                             CompareList.splice(i,1);
+                            break;
                         }
                     }
                     drawList();
@@ -83,12 +84,13 @@ var Visualization = function () {
                     var i;
                     sidebar.selectAll('circle').remove();
                     sidebar.selectAll("foreignObject").remove();
+                    sidebar.selectAll("defs").remove();
                     sidebar.selectAll('text').remove();
 
                     for (i=0; i<CompareList.length;i++) {
                         sidebar.append('circle')
                             .attr('id', function(d) {
-                                return "circleSidebar-"+CompareList[i][0];
+                                return "circleSidebar-"+CompareList[i][0]+"-"+CompareList[i][1];
                             })
                             .attr('r',function(d){ 
                                 circleOffset[i] = new Array(CompareList[i][0],SizeScaleYearSidebar('22013', DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"22013"), CompareList[i][1]));
@@ -173,8 +175,10 @@ var Visualization = function () {
 
                                 return ("url(#gradient-"+CompareList[i][0]+CompareList[i][1]+")");
                             })
-                            .on("click", function(d, i) {
-                                removeCountryFromList(CompareList[i][0]);
+                            .on("click", function(d) {
+                                var id = this.id;
+                                var split = id.split("-");
+                                removeCountryFromList(split[1], split[2]);
                             });
 
                         sidebar.selectAll("foreignObject")
@@ -200,6 +204,9 @@ var Visualization = function () {
                                 return circleOffset[i][2]-(2.5*fontSize);
                             })
                             .append("xhtml:body")
+                            .attr('id', function(d) {
+                                return "foreignObject-"+CompareList[i][0]+"-"+CompareList[i][1];
+                            })
                             .html(function(d) {
                                 var undernourishment = DataProvider.getValuebyiso(CompareList[i][0],CompareList[i][1],"210041");
                                 if (undernourishment == undefined || undernourishment == "") {
@@ -216,7 +223,10 @@ var Visualization = function () {
                                 return "<p><b>"+d.properties.name+" ("+CompareList[i][1]+")</b><br>Undernourishment: "+undernourishment+"<br>GDP: "+GDP+"<br>Political stability: "+politicalStability+"</p>";
                             })
                             .on("click", function(d) {
-                                removeCountryFromList(CompareList[i][0]);
+                                var id = this.id;
+                                var split = id.split("-");
+                                removeCountryFromList(split[1], split[2]);
+                                console.log(split[1] + " " + split[2])
                             });
                     }
                 }
