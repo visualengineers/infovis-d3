@@ -67,9 +67,9 @@ var Visualization = function () {
                     return ColorCode;
                 }
 
-                function removeCountryFromList(iso_a3){
+                function removeCountryFromList(iso_a3, year){
                     for (var i = 0; i<CompareList.length;i++) {
-                        if (CompareList[i].includes(iso_a3)) {
+                        if (CompareList[i][0] == iso_a3 && CompareList[i][1] == year) {
                             CompareList.splice(i,1);
                         }
                     }
@@ -426,13 +426,13 @@ var Visualization = function () {
                             var alreadyInList = false;
                             for (var i = 0; i < CompareList.length; i++) {
                                 if (CompareList[i][0] == iso_a3 && CompareList[i][1] == year) {
-                                    removeCountryFromList(iso_a3);
+                                    removeCountryFromList(iso_a3, year);
                                     alreadyInList = true;
                                 }
                             }
                             if (alreadyInList == false) {
                                 if (CompareList.length == 7) {
-                                    removeCountryFromList(CompareList[0][0]);
+                                    removeCountryFromList(CompareList[0][0], CompareList[0][1]);
                                 }
                                 CompareList[CompareList.length] = new Array(iso_a3,year);
                             }
