@@ -22,7 +22,8 @@
 
         <b-row>
             <b-col cols="10" offset="2">
-                <CountryTimeChart :data="selectedAreaData" :years="years"></CountryTimeChart>
+                <CountryTimeChart :data="selectedAreaData" :years="years" :selected-year="selectedYear"
+                                  :diagramDomain="diagramDomain"></CountryTimeChart>
             </b-col>
         </b-row>
 
