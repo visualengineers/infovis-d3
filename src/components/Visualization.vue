@@ -13,26 +13,22 @@
             <b-col cols="2" class="key">
                 <Key :regions="regions" @change="selectedRegions = $event" :regionColorScale="regionColorScale"></Key>
             </b-col>
-            <b-col cols="10">
+            <b-col cols="7">
                 <Diagram :data="selectedYearData" :selected-regions="selectedRegions"
                          @areaSelected="selectedArea = $event"
                          :diagramDomain="diagramDomain" :regionColorScale="regionColorScale"></Diagram>
             </b-col>
-        </b-row>
-
-        <b-row>
-            <b-col cols="10" offset="2">
-                <CountryTimeChart :data="selectedAreaData" :years="years" :selected-year="selectedYear"
-                                  :diagramDomain="diagramDomain"></CountryTimeChart>
-            </b-col>
-        </b-row>
-
-        <b-row>
-            <b-col>
+            <b-col cols="3">
                 <CountryDetail :data="selectedAreaYearDataSet"></CountryDetail>
             </b-col>
         </b-row>
 
+        <b-row>
+            <b-col cols="7" offset="2">
+                <CountryTimeChart :data="selectedAreaData" :years="years" :selected-year="selectedYear"
+                                  :diagramDomain="diagramDomain"></CountryTimeChart>
+            </b-col>
+        </b-row>
         <div class="copy">
             &copy; 2019 Belegarbeit PBO von Oliver von Seydlitz, Leo Lindhorst, Duc Hung Nguyen, Denis Keiling
         </div>

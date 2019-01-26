@@ -22,7 +22,7 @@
     },
   })
   export default class Diagram extends Vue {
-    private static readonly WIDTH = 1000;
+    private static readonly WIDTH = 800;
     private static readonly HEIGHT = 500;
     private static readonly PADDING = 50;
 
