@@ -14,7 +14,7 @@
   @Component({
     props: {
       regions: Array as new () => string[],
-      regionColorScale: Object as () => d3.ScaleOrdinal<string, string>,
+      regionColorScale: Function as unknown as new () => d3.ScaleOrdinal<string, string>,
     },
   })
   export default class Key extends Vue {
