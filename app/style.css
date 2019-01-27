@@ -31,3 +31,7 @@ svg {
 .sidebar_container{
     grid-area: "sidebar";
 }
+
+b {
+    font-weight: bold;
+}

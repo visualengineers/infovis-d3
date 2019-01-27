@@ -23,8 +23,8 @@ var Visualization = function () {
                 var width  = window.innerWidth;
                 var height = window.innerHeight;
                 var sidebarWidth = sidebar.node().getBoundingClientRect().width;
-                var sidebarHeight = sidebar.node().getBoundingClientRect().height;
-                console.log("W: " + width + " / H: " + height);
+
+                //console.log("W: " + width + " / H: " + height);
 
                 var projection = d3.geoMercator().scale(175).translate([(width/2)-200, (height/2)+100]);
                     
@@ -389,11 +389,9 @@ var Visualization = function () {
                         switch(continent){
                         case"Europe":
                             //W: 1920 / H: 943
-                            //transformString = "translate(" + ((-1.1458*(width/1920))*width) + "," + ((-0.6362*(height/943))*height) + ")scale(3)";
                             transformString = "translate(" + (-0.85*width) + "," + (-0.74*height) + ")scale(3)";
                             break;
                         case"North America":
-                            //transformString = "translate(" + ((-0.2083*(width/1920))*width) + "," + ((-0.4241*(height/943))*height) + ")scale(2)";
                             transformString = "translate(" + (-0.1*width) + "," + (-0.45*height) + ")scale(2)";
                             break;
                         case"South America":

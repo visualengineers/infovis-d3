@@ -1,6 +1,6 @@
 # infovis-d3
 
-Example project for working with D3 and Node.
+Ein Projekt von J.Bojtor, T.Rother und D.Wolf.
 
 ## Data Source
 
