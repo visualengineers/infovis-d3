@@ -120,6 +120,79 @@ var DataProvider = function () {
                 "Country": country
             };
         },
+                /**
+         * Retrieve minimum value for a given parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @return {Object} Result containing value, year, and country.
+         */
+        getMinValue: function (code) {
+            var resultMin = 0;
+            var country = 'unknown';
+            var year = 'unknown';
+            _data.forEach(function (item) {
+                var currentValue = Number.parseFloat(item['Value']);
+                if (item['Item Code'] === code && currentValue < resultMin) {
+                    resultMin = currentValue;
+                    country = item['Area'];
+                    year = item['Year'];
+                }
+            });
+            return {
+                "Value": resultMin,
+                "Year": year,
+                "Country": country
+            };
+        },
+                /**
+         * Retrieve maximum value for a given parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @param {number} yearLookUp - The year of the parameter.
+         * @return {Object} Result containing value, year, and country.
+         */
+        getMaxValueYear: function (code, yearLookUp) {
+            var resultMax = 0;
+            var country = 'unknown';
+            var year = 'unknown';
+            _data.forEach(function (item) {
+                var currentValue = Number.parseFloat(item['Value']);
+                if (item['Item Code'] === code && item['Year'] === yearLookUp && resultMax < currentValue) {
+                    resultMax = currentValue;
+                    country = item['Area'];
+                    year = item['Year'];
+                }
+            });
+            //console.log("MAX VALUE "+resultMax);
+            return {
+                "Value": resultMax,
+                "Year": year,
+                "Country": country
+            };
+        },
+        /**
+         * Retrieve minimum value for a given parameter.
+         * @param {number} code - The numerical code of the parameter (see data source documentation).
+         * @param {number} yearLookUp - The year of the parameter.
+         * @return {Object} Result containing value, year, and country.
+         */
+        getMinValueYear: function (code, yearLookUp) {
+            var resultMin = 100000;
+            var country = 'unknown';
+            var year = 'unknown';
+            _data.forEach(function (item) {
+                var currentValue = Number.parseFloat(item['Value']);
+                if (item['Item Code'] === code && item['Year'] === yearLookUp &&  currentValue < resultMin) {
+                    resultMin = currentValue;
+                    country = item['Area'];
+                    year = item['Year'];
+                }
+            });
+            //console.log("MIN VALUE "+resultMin);
+            return {
+                "Value": resultMin,
+                "Year": year,
+                "Country": country
+            };
+        },
         /**
          * Computes the average for a region of a specific parameter of a given year
          * @param {string} region - The region in the data.
@@ -131,7 +204,7 @@ var DataProvider = function () {
             var sumAverage = 0;
             var countAverage = 0;
             _data.forEach(function (item) {
-                if (item['Region'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
+                if (item['subregion'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
                     sumAverage += Number.parseFloat(item['Value']);
                     countAverage++;
                 }
