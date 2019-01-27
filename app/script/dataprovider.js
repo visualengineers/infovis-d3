@@ -90,7 +90,7 @@ var DataProvider = function () {
         getValue: function (country, year, code) {
             var getValueResult;
             _data.some(function (item) {
-                if (item['Area'] === country && item['Year'] === year && item['Item Code'] === code) {
+                if (item['Area Code'] === country && item['Year'] === year && item['Item Code'] === code) {
                     getValueResult = item['Value'];
                     return true;
                 }
@@ -194,22 +194,22 @@ var DataProvider = function () {
             };
         },
         /**
-         * Computes the average for a region of a specific parameter of a given year
-         * @param {string} region - The region in the data.
-         * @param {number} year - The year of the parameter.
-         * @param {number} code - The numerical code of the parameter (see data source documentation).
-         * @return {number} The average value.
-         */
-        getAverageForRegion: function (region, year, code) {
-            var sumAverage = 0;
-            var countAverage = 0;
-            _data.forEach(function (item) {
-                if (item['subregion'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
-                    sumAverage += Number.parseFloat(item['Value']);
-                    countAverage++;
-                }
-            });
-            return sumAverage / countAverage;
-        }
+        * Computes the average for a region of a specific parameter of a given year
+        * @param {string} region - The region in the data.
+        * @param {number} year - The year of the parameter.
+        * @param {number} code - The numerical code of the parameter (see data source documentation).
+        * @return {number} The average value.
+        */
+       getAverageForRegion: function (region, year, code) {
+           var sumAverage = 0;
+           var countAverage = 0;
+           _data.forEach(function (item) {
+               if (item['Area Code'] === region && item['Year'] === year && item['Item Code'] === code && item['Value'] !== undefined) {
+                   sumAverage += Number.parseFloat(item['Value']);
+                   countAverage++;
+               }
+           });
+           return sumAverage / countAverage;
+       }
     }
 }();
