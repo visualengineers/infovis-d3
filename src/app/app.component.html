@@ -1,4 +1,27 @@
 <h1>
   Visualization
 </h1>
+<!--
+  drinking water  - 21045
+  obesity - 21042
+  political stability - 21032
+-->
+<div class="flexContainer">
+  <app-diagramm width="1280" height="720" padding="20" [year]="year" pointId="21032"
+    xScaleId="21045" yScaleId="21042" [countries]="selectedCountries"></app-diagramm>
+  <ul class="list">
+    <li *ngFor="let item of countries">
+      <input type="checkbox" name="item.country" [value]="item.country" [checked]="selectedCountries.indexOf(item) >= 0"
+        (change)="updateList(item)" [id]="item.country">
+      <label [for]="item.country">
+          {{item.country}}
+          <div class="colorSample" [style.background-color]="item.color"></div>
+      </label>
+    </li>
+  </ul>
+</div>
+<div class="slidecontainer">
+  <input type="range" [min]="yearMin" [max]="yearMax" [(ngModel)]="year" class="slider" id="myRange" step="2">
+  <h2>{{year}}</h2>
+</div>
 <p>by Tobias Mayerhanser & Eik Woldach</p>
