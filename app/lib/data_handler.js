@@ -125,6 +125,6 @@ function getMinMax(data, key){
 }
 
 function loadData() {
-  const json = loadJson("../data/FAOSTAT_data.json");
+  const json = loadJson("FAOSTAT_data.json");
   return formatData(json);
 }
