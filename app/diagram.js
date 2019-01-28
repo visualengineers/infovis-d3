@@ -180,10 +180,11 @@ function generateDiagram(dataSet, svgId, onClickCallback) {
             return escapeId(d.country);
         })
         .attr('cx', function (d, i) {
+            
             if(d.fat)
                 return fatScale(d.fat) + circleRadius
             else
-                return this.cx;
+               return 0; 
         })
         .attr('cy', function (d, i) {
             if(d.bip)
@@ -263,7 +264,7 @@ function updateDiagram(dataSet, svgId, year) {
             if(d.fat)
                 return fatScale(d.fat) + circleRadius
             else
-                return this.cx;
+                return 0;
         })
         .attr('cy', function (d, i) {
             if(d.bip)
