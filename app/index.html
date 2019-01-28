@@ -13,7 +13,7 @@
     <!-- Include Bootstrap -->
     <link rel="stylesheet" href="bootstrap.min.css">
     <script src="jquery-3.3.1.min.js"></script>
-    
+
     <!-- Include D3 -->
     <script src="d3.v5.min.js"></script>
 
@@ -32,7 +32,7 @@
     <div style="text-align:center;">
         <div class="row">
             <div class="col-lg-9" id="diagramContainerId">
-                    <svg id="diagram1"></svg>
+                <svg id="diagram1"></svg>
             </div>
             <div class="col-md-3">
                 <h2 style="text-align:center" id="countryId">Germany</h2>
@@ -45,11 +45,13 @@
                     <div class="col-md-2" id="fatId" style="text-align:left">10</div>
                 </div>
                 <div class="row">
-                    <div class="col-md-5" style="text-align:right;" title="Political stability and absence of violence/terrorism (index)">Political Stability:</div>
+                    <div class="col-md-5" style="text-align:right;" title="Political stability and absence of violence/terrorism (index)">Political
+                        Stability:</div>
                     <div class="col-md-2" style="text-align:left"><svg id="politId"></svg></div>
                 </div>
-                <div style="width:100%"class="row">
-                <hr style="width:100%"></div>
+                <div style="width:100%" class="row">
+                    <hr style="width:100%">
+                </div>
 
                 <div class="row">
                     <select style="border: 0px;padding:10px;width:90%" id="countryList" size="2" onchange="onListSelectionChanges()">
@@ -57,20 +59,20 @@
                 </div>
             </div>
             <div class="col-lg-9" style="margin-left:10px;">
-                    <button onclick="animationLoop()">Play</button>
-                    <button onclick="clearTimeout(animationTimeout)">Stop</button>
-                    <input style="width:90%" type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">
-                </div>
+                <button onclick="animationLoop()">Play</button>
+                <button onclick="clearTimeout(animationTimeout)">Stop</button>
+                <input style="width:90%" type="range" id="year" min="2000" max="2016" value="2000" onchange="update()">
+            </div>
         </div>
-        
-        <script>
-            // load given fao data
-            data = loadData();
+    </div>
+    <script>
+        // load given fao data
+        data = loadData();
 
-            $("#countryList").attr("size",Math.floor(window.innerHeight/60))
-            initUI(data, "diagram1", "diagramContainerId")
+        $("#countryList").attr("size", Math.floor(window.innerHeight / 60))
+        initUI(data, "diagram1", "diagramContainerId")
 
-        </script>
+    </script>
 </body>
 
 </html>
