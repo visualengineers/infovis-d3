@@ -21,11 +21,16 @@
       right: 0;
       bottom: 0;
       left: 0;
+      background-color: #000102;
     }
 
     svg {
-      width: 100%;
+      width: 80%;
       height: 100%;
+    }
+
+    .slider {
+      height: 80%;
     }
 
     path:hover {
@@ -43,19 +48,21 @@
     }
 
     #name {
-      color: coral
+      width: 100%;
+      height: 10%;
+      color: coral;
+      font: 16px sans-serif;
     }
 
     div.tooltip {
       position: absolute;
       text-align: center;
       width: 80px;
-      height: 28px;
+      height: 40px;
       padding: 2px;
       font: 12px sans-serif;
       background: #fff;
       border: 0px;
-      pointer-events: none;
     }
   </style>
 
@@ -64,14 +71,20 @@
 <body>
 
   <div class="container">
-    <svg></svg>
+    <div class="map"><svg></svg></div>
 
-    <div class="info">
-      <h1 id="name"></h1>
+    <div class="slider">
+      <div class="info">
+        <h1 id="name"></h1>
+        <svg></svg>
+      </div>
+      <div class="info2">
+        <h1 id="name"></h1>
+        <svg></svg>
+      </div>
     </div>
-
     <div class="slider_container">
-      <div id="slider">Test</div>
+      <div id="slider"></div>
     </div>
 
   </div>

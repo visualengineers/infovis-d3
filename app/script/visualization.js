@@ -42,8 +42,8 @@ var Visualization = function () {
                 //svg - scaleable vector graphics
                 var svg = d3.select('svg');
 
-                var width = window.innerWidth;
-                var height = window.innerHeight;
+                var width = window.innerWidth - 150;
+                var height = window.innerHeight - 120;
                 console.log("Width: " + width + ", Height: " + height);
                 var transformString = "translate(" + (-0.7 * width) + "," + (-1.1 * height) + ")scale(2.5)";
 
@@ -60,19 +60,22 @@ var Visualization = function () {
                     .attr("class", "tooltip")
                     .style("opacity", 0);
 
+                // PieChart
+                var pie1 = d3.select('.info').select('svg');
+                var pie2 = d3.select('.info2').select('svg');
+
                 // SLIDER
                 var sliderTime = d3
                     .sliderBottom()
                     .min(min)
                     .max(max)
                     .step(1000 * 60 * 60 * 24 * 365)
-                    .width(800)
+                    .width(600)
                     .tickFormat(d3.timeFormat('%Y'))
                     .tickValues(dataTime)
                     .default(new Date(year, 10, 3))
                     .on("end", val => {
                         year = d3.timeFormat('%Y')(val);
-                        //console.log("Year selected: " + year);
 
 
                         // Map repaint mit Slider
@@ -101,69 +104,79 @@ var Visualization = function () {
                     if (ColorCode == ("rgb(0, 0, 0)") || year == "2001") {
                         return "rgb(#000)";
                     }
-                    console.log("Looking up: " + value + " results in " + ColorCode);
                     return ColorCode;
                 }
                 // Ende Einfärben Kontinente
 
+
                 function handleMouseOver(d, i) {
+
                     var name = d.properties.name;
                     var id = d.properties.iso_a3;
+
+                    var sanitaer = DataProvider.getValue(id, year, '21046');
+                    var sanitaerGes = 100 - DataProvider.getValue(id, year, '21046');
+
+                    var undernourished = DataProvider.getValue(id, year, '210041');
+                    var undernourishedGes = 100 - DataProvider.getValue(id, year, '210041');
+                    var dataPie = [sanitaer, sanitaerGes];
+                    var dataPie2 = [undernourished, undernourishedGes];
+
+
                     var red = '#F23C50';
-                    var yellow = '#FFCB05';
+                    var white = '#FFF';
                     var darkGreen = '#16494F';
                     var blue = '#4AD9D9';
 
-                    var height = 100;
-                    var scale = d3.scaleLinear()
-                        .domain([0, 50])
-                        .range([0, height]);
+                    var pie = d3.pie()
+                        .sort(function (a, b) {
+                            return a - b;
+                        });
 
-                    var barWidth = 1;
+                    var arc = d3.arc()
+                        .innerRadius(10)
+                        .outerRadius(30)
+
+                    pie1.selectAll('path')
+                        .data(pie(dataPie))
+                        .enter()
+                        .append('path')
+                        .attr('d', arc)
+                        .attr('fill', function (d, i) {
+                            return [blue, white][i % 2];
+                        })
+
+                        .attr('transform', 'translate(50, 30)');
+
+                    pie2.selectAll('path')
+                        .data(pie(dataPie2))
+                        .enter()
+                        .append('path')
+                        .attr('d', arc)
+                        .attr('fill', function (d, i) {
+                            return [red, white][i % 2];
+                        })
+                        .attr('transform', 'translate(50, 30)');
 
                     // Tooltip Handler
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", .8);
-                    tooltip.html(d.properties.name + "</br>" + DataProvider.getValue(d.properties.iso_a3, year, '21046') )
+                    tooltip.html(d.properties.name + "</br>" + DataProvider.getValue(d.properties.iso_a3, year, '21046'))
                         .style("left", (d3.event.pageX) + "px")
                         .style("top", (d3.event.pageY - 28) + "px");
 
 
-
-                    d3.select('svg')
-                        .selectAll('rect')
-                        .data(data.features)
-                        // .filter(function(d) { return d.properties.geounit ==  name })
-                        // .filter(function(d) { return d.landholder.indexOf(chosen) > -1; })
-                        .enter()
-                        .append('rect')
-                        .attr('x', function (d, i) {
-                            return (barWidth + 10) * i;
-                        })
-                        .attr('y', function (d, i) {
-                            if (DataProvider.getValue(d.properties.iso_a3, year, '21046') > 0)
-                                return height - scale(DataProvider.getValue(d.properties.iso_a3, year, '21046'));
-                        })
-                        .attr('width', width)
-                        .attr('height', function (d, i) {
-                            if (DataProvider.getValue(d.properties.iso_a3, year, '21046') > 0)
-                                return scale(DataProvider.getValue(d.properties.iso_a3, year, '21046'));
-                        })
-                        .style('fill', function (d, i) {
-                            if (DataProvider.getValue(d.properties.iso_a3, year, '21046') <= 20) return red;
-                            if (DataProvider.getValue(d.properties.iso_a3, year, '21046') <= 40) return yellow;
-                            if (DataProvider.getValue(d.properties.iso_a3, year, '21046') <= 60) return blue;
-                        })
-
-                    return document.getElementById('name').innerHTML = name + " " + id + "</br><h5>" + "Sanitary: " + DataProvider.getValue(d.properties.iso_a3, year, '21046') + " %</h5>";
+                    return document.getElementById('name').innerHTML = "<h3>" + name + "</h3><h4>" + id + "</h4>" + "Sanitary:</br>" + DataProvider.getValue(d.properties.iso_a3, year, '21046') + " %</br>"
+                        + "</br>Undernourished:</br>" + DataProvider.getValue(d.properties.iso_a3, year, '210041') + " %</h5>";
                 }
 
                 // Hintergrund
                 svg.append('rect')
-                    .attr('width', width)
+                    .attr('width', width - 200)
                     .attr('height', height)
                     .attr('fill', '#000102');
+
 
                 // Map Initial
                 svg.selectAll('path')
@@ -190,26 +203,10 @@ var Visualization = function () {
                         tooltip.transition()
                             .duration(500)
                             .style("opacity", 0);
-                    });
-
-
-                // svg.selectAll('text')
-                //     .data(data.features)
-                //     .enter()
-                //     .append('text')
-                //     .text(function (d) {
-                //         return d.properties.name; //alle Daten von geodata.json
-                //     })
-                //     .attr("x", function (d) {
-                //         return path.centroid(d)[0];
-                //     })
-                //     .attr("y", function (d) {
-                //         return path.centroid(d)[1];
-                //     })
-                //     .attr("text-anchor", "middle")
-                //     .attr('font-size', '6pt')
-                //     .attr('fill', 'white');
-
+                        pie1.selectAll("path").remove();
+                        pie2.selectAll("path").remove();
+                    })
+                    ;
             })
 
         }
