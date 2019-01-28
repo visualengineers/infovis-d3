@@ -1,27 +1,43 @@
-<h1>
-  Visualization
-</h1>
 <!--
-  drinking water  - 21045
-  obesity - 21042
-  political stability - 21032
+drinking water  - 21045
+obesity - 21042
+political stability - 21032
+  protein intake - 21013
 -->
+<div class="header">
+  <h1>
+    Visualization
+  </h1>
+  <div class="axis">
+    <p>x-axis</p>
+    <select name="xAxis" id="xaxis" [(ngModel)]="xAxis" (ngModelChange)="xChanged($event)">
+      <option *ngFor="let item of xItems" [ngValue]="item">{{item.legend}}</option>
+    </select>
+  </div>
+  <div class="axis">
+    <p>y-axis</p>
+    <select name="yAxis" id="yaxis" [(ngModel)]="yAxis" (ngModelChange)="yChanged($event)">
+      <option *ngFor="let item of yItems" [ngValue]="item">{{item.legend}}</option>
+    </select>
+  </div>
+</div>
 <div class="flexContainer">
-  <app-diagramm width="1280" height="720" padding="20" [year]="year" pointId="21032"
-    xScaleId="21045" yScaleId="21042" [countries]="selectedCountries"></app-diagramm>
+  <app-diagramm width="1280" height="720" padding="20" [year]="year" pointId="21032" [countries]="selectedCountries"
+    [xAxis]="xAxis" [yAxis]="yAxis" pointLegend="Political stability"></app-diagramm>
   <ul class="list">
     <li *ngFor="let item of countries">
       <input type="checkbox" name="item.country" [value]="item.country" [checked]="selectedCountries.indexOf(item) >= 0"
         (change)="updateList(item)" [id]="item.country">
       <label [for]="item.country">
-          {{item.country}}
-          <div class="colorSample" [style.background-color]="item.color"></div>
+        {{item.country}}
+        <div class="colorSample" [style.background-color]="item.color"></div>
       </label>
     </li>
   </ul>
 </div>
+
 <div class="slidecontainer">
   <input type="range" [min]="yearMin" [max]="yearMax" [(ngModel)]="year" class="slider" id="myRange" step="2">
-  <h2>{{year}}</h2>
+  <h2>Change year</h2>
 </div>
 <p>by Tobias Mayerhanser & Eik Woldach</p>

@@ -2,6 +2,9 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import data from './FAOSTAT_data.json';
 import { ICountry } from './ICountry.js';
+import { of } from 'rxjs';
+import { map, distinct } from 'rxjs/operators';
+import { IItem } from './IItem.js';
 
 @Injectable({
   providedIn: 'root'
@@ -70,9 +73,9 @@ export class DataService {
       region.Countries.forEach(country => {
         countries.push(
           {
-          country: country.Area,
-          color: this.generateRandomColor()
-        });
+            country: country.Area,
+            color: this.generateRandomColor()
+          });
       });
     });
     return countries;
@@ -147,12 +150,29 @@ export class DataService {
     return sumAverage / countAverage;
   }
 
+  getItemList(): IItem[] {
+    const items = [];
+    this.data.forEach(item => {
+      if (item['Item Code'] !== '21032') {
+        items.push({
+          id: item['Item Code'],
+          legend: item['Item']
+        });
+      }
+    });
+    return items.filter((thing, index, self) =>
+      index === self.findIndex((t) => (
+        t.id === thing.id && t.legend === thing.legend
+      ))
+    );
+  }
+
   generateRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+      color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
-}
+  }
 }

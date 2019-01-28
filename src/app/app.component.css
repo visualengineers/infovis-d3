@@ -1,3 +1,11 @@
+.header {
+  display: flex;
+}
+
+.axis {
+  margin-left: 20px;
+}
+
 .flexContainer {
     display: flex;
 }
@@ -12,12 +20,20 @@
     height: 720px;
     overflow: scroll;
     list-style-type: none;
+    overflow-x:hidden;
 }
 
 .slidecontainer {
     width: 70%;
     padding: 10px;
-    /* Width of the outside container */
+    display: flex;
+}
+
+h2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+  width: 240px;
 }
 
 /* The slider itself */
