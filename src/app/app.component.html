@@ -39,5 +39,7 @@ political stability - 21032
 <div class="slidecontainer">
   <input type="range" [min]="yearMin" [max]="yearMax" [(ngModel)]="year" class="slider" id="myRange" step="2">
   <h2>Change year</h2>
+  <button (click)="selectAll()">Select all</button>
+  <button (click)="unselectAll()">Unselect all</button>
 </div>
 <p>by Tobias Mayerhanser & Eik Woldach</p>

@@ -61,6 +61,14 @@ export class AppComponent implements OnInit {
     }
   }
 
+  selectAll() {
+    this.selectedCountries = [...this.countries];
+  }
+
+  unselectAll() {
+    this.selectedCountries = [];
+  }
+
   generateRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';
