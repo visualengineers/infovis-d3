@@ -3,7 +3,7 @@
  * Visualization module
  */
 var Visualization = function () {
-   
+
     return {
         /**
          * Create the visualisation. This is the main application entry point.
@@ -87,12 +87,12 @@ var Visualization = function () {
                     var name = d.properties.name;
                     var id = d.properties.iso_a3;
 
-                    var sanitaer = DataProvider.getValue(id, year, '21046');
-                    var sanitaerGes = 100 - DataProvider.getValue(id, year, '21046');
+                    var drinkingWater = DataProvider.getValue(id, year, '21045');
+                    var drinkingWaterGes = 100 - DataProvider.getValue(id, year, '21045');
 
                     var undernourished = DataProvider.getValue(id, year, '210041');
                     var undernourishedGes = 100 - DataProvider.getValue(id, year, '210041');
-                    var dataPie = [sanitaer, sanitaerGes];
+                    var dataPie = [drinkingWater, drinkingWaterGes];
                     var dataPie2 = [undernourished, undernourishedGes];
 
 
@@ -121,7 +121,7 @@ var Visualization = function () {
 
                     pie1.append("text")
                         .attr("text-anchor", "middle")
-                        .text(sanitaer)
+                        .text(drinkingWater)
                         .style("fill", "rgb(255, 207, 75)")
                         .attr('transform', 'translate(100, 80)')
 
@@ -134,7 +134,7 @@ var Visualization = function () {
                             return [red, white][i % 2];
                         })
                         .attr('transform', 'translate(100, 75)');
-                        
+
                     pie2.append("text")
                         .attr("text-anchor", "middle")
                         .text(undernourished)
@@ -174,8 +174,7 @@ var Visualization = function () {
                         return paintMapRegions('21032', DataProvider.getAverageForRegion(d.properties.iso_a3, year, "21032"), year);
                         //übergebe Daten aus geodata.json
                         // 21032 - Politische Stabilität
-                        // 21046 - sichere Sanitäranlagen
-                        // 21047 - Trinkwasser sicher (in Prozent)
+                        // 21045 - Trinkwasser sicher (in Prozent)
                         // 210041 - Unterernährung
                     })
                     .on('mouseover', handleMouseOver)
