@@ -162,7 +162,7 @@ var Visualization = function () {
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", .8);
-                    tooltip.html(d.properties.name + "</br>" + DataProvider.getValue(d.properties.iso_a3, year, '21046'))
+                    tooltip.html(d.properties.name)
                         .style("left", (d3.event.pageX) + "px")
                         .style("top", (d3.event.pageY - 28) + "px");
 
