@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, IterableDiffers, DoCheck } from '@angular/core';
-import { select, scaleLinear, axisLeft, axisBottom } from 'd3';
+import { select, scaleLinear, axisLeft, axisBottom, thresholdScott } from 'd3';
 import { DataService } from '../data/data.service';
 import { ICountry } from '../data/ICountry';
 import { IItem } from '../data/IItem';
@@ -80,24 +80,34 @@ export class DiagrammComponent implements OnInit, DoCheck {
 
   ngOnInit(): void {
     // create scales for correct value positioning
-    this.yScale = scaleLinear()
-      .domain([0, this.data.getMaxValue(this.yAxis.id).Value])
-      .range([this.height - (this.padding * 2), 0]);
-
-    this.xScale = scaleLinear()
-      .domain([this.data.getMaxValue(this.xAxis.id).Value, 0])
-      .range([this.width - (this.padding * 2), 0]);
-
+    this.createAxisScales();
     this.generateDiagramm();
   }
 
   // update data on changes
   updateData() {
+    this.createAxisScales();
+
+    // y-axis
+    select('#yAxisScale').remove();
+    select('#diagramm')
+      .append('g')
+      .attr('id', 'yAxisScale')
+      .call(axisLeft(this.yScale));
+
     select('#yAxis').remove();
     select('#diagramm')
       .append('text')
       .text(this.yAxis.legend)
       .attr('id', 'yAxis');
+
+    // x-axis
+    select('#xAxisScale').remove();
+    select('#diagramm')
+      .append('g')
+      .attr('id', 'xAxisScale')
+      .call(axisBottom(this.xScale))
+      .attr('transform', `translate(0, ${this.height - (this.padding * 2)})`);
 
     select('#xAxis').remove();
     select('#diagramm')
@@ -182,6 +192,7 @@ export class DiagrammComponent implements OnInit, DoCheck {
     // y-axis
     select('#diagramm')
       .append('g')
+      .attr('id', 'yAxisScale')
       .call(axisLeft(this.yScale));
 
     select('#diagramm')
@@ -192,6 +203,7 @@ export class DiagrammComponent implements OnInit, DoCheck {
     // x-axis
     select('#diagramm')
       .append('g')
+      .attr('id', 'xAxisScale')
       .call(axisBottom(this.xScale))
       .attr('transform', `translate(0, ${this.height - (this.padding * 2)})`);
 
@@ -204,10 +216,10 @@ export class DiagrammComponent implements OnInit, DoCheck {
 
     // point size legend
     select('#diagramm')
-    .append('text')
-    .text(`Point-size: ${this.pointLegend}`)
-    .attr('id', 'pointSize')
-    .attr('x', this.width / 2);
+      .append('text')
+      .text(`Point-size: ${this.pointLegend}`)
+      .attr('id', 'pointSize')
+      .attr('x', this.width / 2);
 
     // create circle group
     const circles = select('#diagramm')
@@ -258,7 +270,7 @@ export class DiagrammComponent implements OnInit, DoCheck {
       .attr('x', this.xScale(this.getX(country)) - 15)
       .attr('y', this.yScale(this.getY(country)));
 
-      select('#diagramm')
+    select('#diagramm')
       .append('text')
       .attr('id', `legend_${this.cleanCountryName(country)}`)
       .text(`${this.shortenText(country.country)}`)
@@ -269,6 +281,16 @@ export class DiagrammComponent implements OnInit, DoCheck {
   removePointValue(country: ICountry) {
     select(`#value_${this.cleanCountryName(country)}`).remove();
     select(`#legend_${this.cleanCountryName(country)}`).remove();
+  }
+
+  createAxisScales() {
+    this.yScale = scaleLinear()
+      .domain([0, this.data.getMaxValue(this.yAxis.id).Value])
+      .range([this.height - (this.padding * 2), 0]);
+
+    this.xScale = scaleLinear()
+      .domain([this.data.getMaxValue(this.xAxis.id).Value, 0])
+      .range([this.width - (this.padding * 2), 0]);
   }
 
   // get value for x-axis
