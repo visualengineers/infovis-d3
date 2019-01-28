@@ -220,7 +220,7 @@ var Visualization = function () {
                                 if (politicalStability == undefined || politicalStability == "") {
                                     politicalStability = "n.a."
                                 }
-                                return "<p><b>"+d.properties.name+" ("+CompareList[i][1]+")</b><br>Undernourishment: "+undernourishment+"<br>GDP: "+GDP+"<br>Political stability: "+politicalStability+"</p>";
+                                return "<p><b>"+d.properties.name+" ("+CompareList[i][1]+")</b><br>Undernourishment: "+undernourishment+"%<br>GDP: "+GDP+"$<br>Political stability: "+politicalStability+"</p>";
                             })
                             .on("click", function(d) {
                                 var id = this.id;
