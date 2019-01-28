@@ -61,8 +61,8 @@ var Visualization = function () {
                     .style("opacity", 0);
 
                 // PieChart
-                var pie1 = d3.select('.info').select('svg');
-                var pie2 = d3.select('.info2').select('svg');
+                var pie1 = d3.select('.pie1').select('svg');
+                var pie2 = d3.select('.pie2').select('svg');
 
                 // SLIDER
                 var sliderTime = d3
@@ -100,11 +100,11 @@ var Visualization = function () {
                     var myScale = d3.scaleLinear()
                         .domain([DataProvider.getMinValueYear(code, year).Value, 0, DataProvider.getMaxValueYear(code, year).Value])
                         .range(['red', 'yellow', 'green']);
-                    var ColorCode = myScale(value);
-                    if (ColorCode == ("rgb(0, 0, 0)") || year == "2001") {
+                    var color = myScale(value);
+                    if (color == ("rgb(0, 0, 0)") || year == "2001") {
                         return "rgb(#000)";
                     }
-                    return ColorCode;
+                    return color;
                 }
                 // Ende Einfärben Kontinente
 
@@ -145,8 +145,8 @@ var Visualization = function () {
                         .attr('fill', function (d, i) {
                             return [blue, white][i % 2];
                         })
+                        .attr('transform', 'translate(50, 30)')
 
-                        .attr('transform', 'translate(50, 30)');
 
                     pie2.selectAll('path')
                         .data(pie(dataPie2))
@@ -175,7 +175,7 @@ var Visualization = function () {
                 svg.append('rect')
                     .attr('width', width - 200)
                     .attr('height', height)
-                    .attr('fill', '#000102');
+                    .attr('fill', '#2f5f8f');
 
 
                 // Map Initial
