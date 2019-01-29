@@ -1,0 +1,30 @@
+body {
+}
+
+h1 {
+  color: black;
+  text-align: left;
+}
+
+p {
+  font-family: arial;
+  font-size: 20px;
+}
+
+#app {
+	margin-left: 30px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 4px;
+}
+
+.axisSteelBlue text {
+  fill: steelblue;
+}
+
+.axisRed text {
+  fill: red;
+}

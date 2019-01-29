@@ -8,18 +8,85 @@ var Visualization = function () {
         /**
          * Create the visualisation. This is the main application entry point.
          */
-        draw: function () {
-            var _greeting = '<pre>There are ' + DataProvider.getPreparedData().length + ' regions. ';
-            DataProvider.getPreparedData().forEach(function (region) {
-                _greeting += region.Region + ' has ' + region.Countries.length + ' countries.\n';
+        draw: function (dataFromTimeLine) {
+            /***
+             * */
+
+            data = dataFromTimeLine.actualData;
+
+            var maxValue = d3.max(data, function(d){
+                return d.value;
             });
-            _greeting += 'By the way, Germany had ' + DataProvider.getValue('Germany', '2016', '21042') + ' percent of obese people in 2016.\n\n'
-            _greeting += 'Northern Africa had an average index of ' + DataProvider.getAverageForRegion('Northern Africa', '2016', '21032') + ' for political stability in 2015,\n';
-            _greeting += 'while Western Europe had ' + DataProvider.getAverageForRegion('Western Europe', '2016', '21032') + '. ';
-            var bestIndex = DataProvider.getMaxValue('21032');
-            _greeting += 'The best index was ' + bestIndex.Value + ' in ' + bestIndex.Country + ' in the year ' + bestIndex.Year + '.';
-            _greeting += '</pre>';
-            document.body.innerHTML = _greeting;
+            var minValue = d3.min(data, function(d){
+                return d.value;
+            });
+            var maxYear = d3.max(data, function (d) {
+                return d.year;
+            });
+            var minYear = d3.min(data, function (d) {
+                return d.year;
+            });
+
+            var maxYearAsString = String(maxYear);
+            var minYearAsString = String(minYear);
+
+            console.log("Min year = "+minYear);
+
+            var newData = [];
+            var height = 300;
+            var width = 300;
+            var barWidth = 10;
+            var scale  = d3.scaleLinear().
+            domain([0, maxValue]).
+            range([height, 0]);
+
+            for(var i = 0; i < data.length; i++)
+                newData[i] = scale(data[i]);
+
+            var SVGGroup = d3.select('svg').append('g').attr('transform', 'translate(50, 20)');
+
+            var dateScale = d3.scaleTime()
+                .range([0, width])
+                .domain([new Date(minYearAsString), new Date(maxYearAsString)]);
+
+            var rect = SVGGroup
+                .selectAll('rect')
+                .data(data)
+                .enter()
+                .append('rect')
+                .attr('x', function (d){
+                    return dateScale(new Date(String(d.year)))-(barWidth/2);})
+                .attr('y', function (d) {
+                    return scale(d.value);
+                })
+                .attr('width', barWidth)
+                .attr('height', function (d) {
+                    console.log(d.year, scale(d.year));
+                    return height - scale(d.value);
+                })
+                .transition()
+                .duration(300)
+                .attr('x', function (d){
+                    return dateScale(new Date(String(d.year)))-(barWidth/2);})
+                .attr('y', function (d) {
+                    return scale(d.value);
+                })
+                .attr('width', barWidth)
+                .attr('height', function (d) {
+                    console.log(d.year, scale(d.year));
+                    return height - scale(d.value);
+                });
+
+            SVGGroup.append('g')
+                .call(d3.axisLeft(scale));
+            SVGGroup.append('g')
+                .attr('transform', 'translate(0, '+height+')')
+                .call(d3.axisBottom(dateScale).tickFormat(d3.timeFormat("%Y")))
+                .selectAll("text")
+                .attr("dx", "-1.8em")
+                .attr("dy", "-0.7em")
+                .attr('transform', "rotate(-90)");
         }
     }
-}(); 
+}();
+

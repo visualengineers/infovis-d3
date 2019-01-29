@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>d3 Updating Bar Chart With Dropdown</title>
+    <script src="lib/d3.js" charset="utf-8"></script>
+    <script src="lib/d3-simple-slider.js"></script>
+    <script src="lib/vue.js"></script>
+    <link rel="stylesheet" href="assets/style.css">
+
+    <script src="script/helper.js"></script>
+    <script src="script/dataprovider.js"></script>
+    <script src="script/test.js"></script>
+    <script src="script/dropDown.js"></script>
+    <script src="script/draw2Graphs.js"></script>
+    <script src="script/fillGauge.js"></script>
+    <style>
+        div.tooltip {
+            color: white;
+            position: absolute;
+            text-align: center;
+            width: 180px;
+            height: 42px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: rgba(0,0,0,.8);
+            border: 2px solid black;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<!-- APP -->
+
+<div>
+    <div id="dropdownRegion1">
+        <select v-model="selectedRegion" @change="onChange()">
+            <!-- Wenn man hier, (option, index) in options1 im v-for!
+            <option v-for="(option, index) in options1" v-bind:value="option.Index">-->
+            <option v-for="option in options" v-bind:value="option.Index">
+                {{option.Region}}
+            </option>
+            <!--<option v-for="item in selected"></option>-->
+        </select>
+    </div>
+
+    <div id="dropdownCountry1">
+        <select v-model="selectedCountry" @change="onChange()">
+            <option v-for="option in options" v-bind:value="option.Area">
+                {{option.Area}}
+            </option>
+        </select>
+    </div>
+</div>
+
+<div>
+    <div id="dropdownRegion2">
+        <select v-model="selectedRegion" @change="onChange()">
+            <!-- Wenn man hier, (option, index) in options1 im v-for!
+            <option v-for="(option, index) in options1" v-bind:value="option.Index">-->
+            <option v-for="option in options" v-bind:value="option.Index">
+                {{option.Region}}
+            </option>
+            <!--<option v-for="item in selected"></option>-->
+        </select>
+    </div>
+
+    <div id="dropdownCountry2">
+        <select v-model="selectedCountry" @change="onChange()">
+            <option v-for="option in options" v-bind:value="option.Area">
+                {{option.Area}}
+            </option>
+        </select>
+    </div>
+</div>
+
+
+<div id="forDrawingCircles">
+</div>
+<div height="200" width="100%">
+    <div><p id="value-time"></p></div>
+    <div><div id="slider-time"></div></div>
+</div>
+<div id="forDrawingGraph"></div>
+<div id="forDrawingGauges"></div>
+<script>
+    window.onload = function () {
+        DataProvider.loadJSON(function (response) {
+            // call drawing functions
+            //Visualization.draw();
+            init();
+            selectValuesForPresentation();
+            drawSlider();
+            //drawGraphs();
+        });
+    };
+
+</script>
+</body>
+</html>

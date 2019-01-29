@@ -1,27 +1,117 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="description" content="D3 example project">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Infovis</title>
-  <script src="lib/d3.js"></script>
-  <script src="script/dataprovider.js"></script>
-  <script src="script/visualization.js"></script>
-  <script src="script/helper.js"></script>
-  </script>
+    <meta charset="utf-8">
+    <meta name="description" content="D3 example project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Infovis</title>
+    <script src="lib/d3.js"></script>
+    <script src="lib/vue.js"></script>
+    <script src="script/dataprovider.js"></script>
+    <script src="script/visualization.js"></script>
+    <script src="script/helper.js"></script>
+    <script src="script/loadOptions.js"></script>
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
 </head>
+
 <body>
+    <div class="header">
+        <h1>Programmierung von Benutzeroberflächen - Beleg</h1>
+        <p>Wir lassen Graphen entstehen.</p>
+    </div>
+<!-- Index --> 
+    <!-- Top Menü -->
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header"></div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <!--Bei Informationen schreiben woher wir die Informationen für die Graphen haben (ihre Firma einbeziehen) -->
+                <li><a href="informationen.html">Informationen</a></li>
+                <li><a href="impressum.html">Impressum</a></li>
+            </ul>
+        </div>
+    </nav>
 
-  <script>
-    window.onload = function () {
-      DataProvider.loadJSON(function (response) {
-        // call drawing functions
-        Visualization.draw();
-      });
-    };    
-  </script>
+    <!-- Mittlere Textbox
+    <div class="column middle">
+        <h2>Hier können Sie</h2>
+        <p>Blabla bla blablabla bla, blabla. Blablabla, blablabla blablabla!</p>
+    </div>-->
 
+    <!-- APP -->
+    <div>
+        <div id="dropdownRegion1">
+            <select v-model="selectedRegion" @change="onChange()">
+                <!-- Wenn man hier, (option, index) in options1 im v-for!
+                <option v-for="(option, index) in options1" v-bind:value="option.Index">-->
+                <option v-for="option in options" v-bind:value="option.Index">
+                    {{option.Region}}
+                </option>
+                <!--<option v-for="item in selected"></option>-->
+            </select>
+        </div>
+
+        <div id="dropdownCountry1">
+            <select v-model="selectedCountry" @change="onChange()">
+                <option v-for="option in options" v-bind:value="option.Area">
+                    {{option.Area}}
+                </option>
+            </select>
+        </div>
+
+        <div id="dropdownDataSet1">
+            <select v-model="selectedDataSet" @change="onChange()">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{option.Text}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div>
+        <div id="dropdownRegion2">
+            <select v-model="selectedRegion" @change="onChange()">
+                <!-- Wenn man hier, (option, index) in options1 im v-for!
+                <option v-for="(option, index) in options1" v-bind:value="option.Index">-->
+                <option v-for="option in options" v-bind:value="option.Index">
+                    {{option.Region}}
+                </option>
+                <!--<option v-for="item in selected"></option>-->
+            </select>
+        </div>
+
+        <div id="dropdownCountry2">
+            <select v-model="selectedCountry" @change="onChange()">
+                <option v-for="option in options" v-bind:value="option.Area">
+                    {{option.Area}}
+                </option>
+            </select>
+        </div>
+
+        <div id="dropdownDataSet2">
+            <select v-model="selectedDataSet" @change="onChange()">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{option.Text}}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <svg width='400' height="500"></svg>
 </body>
+
+<script>
+    window.onload = function () {
+        DataProvider.loadJSON(function (response) {
+            // call drawing functions
+            //Visualization.draw();
+            selectValuesForPresentation();
+        });
+    };
+</script>
+
 </html>
