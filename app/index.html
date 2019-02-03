@@ -1,24 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8">
-    <meta name="description" content="D3 example project">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Infovis</title>
-    <script src="lib/d3.js"></script>
+    <title>d3 Updating Bar Chart With Dropdown</title>
+    <script src="lib/d3.js" charset="utf-8"></script>
+    <script src="lib/d3-simple-slider.js"></script>
     <script src="lib/vue.js"></script>
-    <script src="script/dataprovider.js"></script>
-    <script src="script/visualization.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+
     <script src="script/helper.js"></script>
-    <script src="script/loadOptions.js"></script>
+    <script src="script/dataprovider.js"></script>
+    <script src="script/test.js"></script>
+    <script src="script/dropDown.js"></script>
+    <script src="script/draw2Graphs.js"></script>
+    <script src="script/fillGauge.js"></script>
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets/css/bootstrap-theme.min.css">
-</head>
+    <style>
+        div.tooltip {
+            color: white;
+            position: absolute;
+            text-align: center;
+            width: 180px;
+            height: 42px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: rgba(0,0,0,.8);
+            border: 2px solid black;
+            pointer-events: none;
+        }
 
+        div.tooltip2 {
+            color: white;
+            position: absolute;
+            text-align: center;
+            width: 80px;
+            height: 30px;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: rgba(0,0,0,.8);
+            border: 2px solid black;
+            pointer-events: none;
+        }
+    </style>
+</head>
 <body>
-    <div class="header">
+
+<div class="header">
         <h1>Programmierung von Benutzeroberflächen - Beleg</h1>
         <p>Wir lassen Graphen entstehen.</p>
     </div>
@@ -36,14 +66,9 @@
         </div>
     </nav>
 
-    <!-- Mittlere Textbox
-    <div class="column middle">
-        <h2>Hier können Sie</h2>
-        <p>Blabla bla blablabla bla, blabla. Blablabla, blablabla blablabla!</p>
-    </div>-->
-
-    <!-- APP -->
-    <div>
+<!-- APP!!!! -->
+<div style="height: 50px">
+    <div id="firstDropDown" style="width: 500px; position: absolute; left: 50px">
         <div id="dropdownRegion1">
             <select v-model="selectedRegion" @change="onChange()">
                 <!-- Wenn man hier, (option, index) in options1 im v-for!
@@ -55,24 +80,16 @@
             </select>
         </div>
 
-        <div id="dropdownCountry1">
+        <div id="dropdownCountry1" style="left: 50px">
             <select v-model="selectedCountry" @change="onChange()">
                 <option v-for="option in options" v-bind:value="option.Area">
                     {{option.Area}}
                 </option>
             </select>
         </div>
-
-        <div id="dropdownDataSet1">
-            <select v-model="selectedDataSet" @change="onChange()">
-                <option v-for="option in options" v-bind:value="option.value">
-                    {{option.Text}}
-                </option>
-            </select>
-        </div>
     </div>
 
-    <div>
+    <div id="secondDropDown" style="width: 500px; position: absolute; left: 550px">
         <div id="dropdownRegion2">
             <select v-model="selectedRegion" @change="onChange()">
                 <!-- Wenn man hier, (option, index) in options1 im v-for!
@@ -91,27 +108,43 @@
                 </option>
             </select>
         </div>
-
-        <div id="dropdownDataSet2">
-            <select v-model="selectedDataSet" @change="onChange()">
-                <option v-for="option in options" v-bind:value="option.value">
-                    {{option.Text}}
-                </option>
-            </select>
-        </div>
     </div>
 
-    <svg width='400' height="500"></svg>
-</body>
 
+
+
+
+
+
+
+</div>
+
+
+
+<div id="forDrawingCircles">
+</div>
+<div height="200" width="100%">
+    <div><p id="value-time"></p></div>
+    <div><div id="slider-time"></div></div>
+</div>
+<div>
+    <p id="selectedValueForCountry1"></p>
+    <p id="selectedValueForCountry2"></p>
+</div>
+<div id="forDrawingGraph"></div>
+<div id="forDrawingGauges"></div>
 <script>
     window.onload = function () {
         DataProvider.loadJSON(function (response) {
             // call drawing functions
             //Visualization.draw();
+            init();
             selectValuesForPresentation();
+            drawSlider();
+            //drawGraphs();
         });
     };
-</script>
 
+</script>
+</body>
 </html>

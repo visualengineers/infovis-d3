@@ -251,8 +251,8 @@ var DataProvider = function () {
 
             if (isNaN(GrossDomesticProductPerCapita) || GrossDomesticProductPerCapita === '') {GrossDomesticProductPerCapita='999999';}
             if (isNaN(AverageProteinSupply) || AverageProteinSupply === '') {AverageProteinSupply='999999';}
-            if (isNaN(PrevalenceOfObesityInTheAdultPop) || PrevalenceOfObesityInTheAdultPop === '') {PrevalenceOfObesityInTheAdultPop='2.5';}
-            if (isNaN(PrevalenceOfUndernourishment) || PrevalenceOfUndernourishment === '') {PrevalenceOfUndernourishment='2.5';}
+            if (isNaN(PrevalenceOfObesityInTheAdultPop) || PrevalenceOfObesityInTheAdultPop === '') {PrevalenceOfObesityInTheAdultPop='999';}
+            if (isNaN(PrevalenceOfUndernourishment) || PrevalenceOfUndernourishment === '') {PrevalenceOfUndernourishment='999';}
 
             let singleData = {
                 GrossDomesticProductPerCapita: GrossDomesticProductPerCapita,

@@ -23,8 +23,10 @@ var Helper = function () {
                     }
                 });
             }
+
             pearson = sumCounter / (Math.sqrt(sumDenominator1)*Math.sqrt(sumDenominator2));
-            if (isNaN(pearson)){pearson = 0;}
+            if (isNaN(pearson)){pearson = '0.00';}
+            else {pearson = (Math.round(pearson * 100) / 100);}
             callback(pearson);
         },
         getSpearmanCoeffizient: function (timeline1,timeline2,callback) {
@@ -93,7 +95,8 @@ var Helper = function () {
                 });
             }
             spearman = sumCounter / (Math.sqrt(sumDenominator1)*Math.sqrt(sumDenominator2));
-            if (isNaN(spearman)){spearman = 0;}
+            if (isNaN(spearman)){spearman = '0.00';}
+            else {spearman = (Math.round(spearman * 100) / 100);}
             callback(spearman);
         },
         echoValue : function (value) {

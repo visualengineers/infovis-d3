@@ -37,9 +37,28 @@
     </nav>
 
     <!-- Mittlere Textbox -->
-    <div class="column middle">
-        <h2>Informationen</h2>
-        <p>Die Daten die uns zur Verfügung standen wurden uns bereitgestellt von: <br><b>Gesellschaft für Technische Visualistik<b></p>
+    <div class="row">
+        <div class="col-xs3 col-sm-3 col-md-3 col-lg-3"></div>
+        <div class="col-xs6 col-sm-6 col-md-6 col-lg-6">
+            <h2 style="text-align: center">Informationen</h2>
+            <p>Die hier verwendeten Datensätze wurden bereitgestellt durch: <b>Gesellschaft für Technische Visualistik</b></p>
+            <h2 style="text-align: center">Darstellung der Daten</h2>
+            <h4 style="text-align: center; text-decoration: underline">Kreisdiagramm</h4>
+            <p>Der Kreis im Norden stellt die Proteinaufnahme dar. Seine Farbe ist unverändert fleischrosa. Der zentrale Kreis in der Mitte das Bruttoinlandsprodukt. Seine Farbe ist unverändert blau. Links unten findet man die Unterernährung. Die Farbe verändert sich hier von grün bei einer Unterernährung von 2,5% hin zu rot bei einer Unterernährung von 40%.</p>
+            <p>Rechts unten im Diagramm findet man die Fettleibigkeit. Ihre Farbe rangiert von grün bei einer Fettleibigkeit von 2,5% hin zu rot bei einer Fettleibigkeit von 40%. Die Größe der Kreise skaliert mit den Einzelwerten. Konkrete Einzelwerte werden im Mouseover angezeigt.</p>
+            <p>Die Verbindungslinien stellen über Farbigkeit und die angegebenen Werte die Korrelation dar. Die Farbigkeit rangiert hier von rot bei einer Korrelation von 0 bis hin zu grün bei einer Korrelation von 1. Bei den Werten wird hinter dem P der Pearson-Korrelationskoeffizient angegeben, hinter dem S steht der Spearman-Korrelationkoeffizient.</p>
+            <p>Insofern bei einem Datensatz keine Werte hinterlegt sind, so werden die betroffenen Kreise grau ausgefüllt dargestellt. Beim Mouseover wird dann bei der Anzeige des Wertes „Value not provided“ ausgegeben.</p>
+            <h4 style="text-align: center; text-decoration: underline">Korrelation der Werte verschiedener Länder</h4>
+            <p>Wählt man mittels Mouseklick einen Wertekreis aus Diagramm 1 und einen aus Diagramm 2 so diese miteinander korreliert.</p>
+            <p>Farbigkeit und Darstellung sind analog zur Darstellung der Korrelation im Einzeldiagramm. Klickt man einen der verbundenen Datensätze erneut an, wird die Korrelationslinie deaktiviert. Alternativ kann man auch auf einen der noch nicht ausgewählten Datenkreise klicken und erhält dann die zu diesem gehörende Korrelation.</p>
+            <h4 style="text-align: center; text-decoration: underline">Darstellung der Einzelwerte mittels Zeitstrahl</h4>
+            <p>Unter den Kreisdiagrammen befindet sich ein Zeitstrahl. Über ihn kann ein konkretes Jahr ausgewählt werden, dessen Einzelwerte dann angezeigt werden. Auf die Korrelationswerte, die ja immer auf allen Werten eines Datensatzes beruhen, hat dies natürlich keinen Einfluß.</p>
+            <h4 style="text-align: center; text-decoration: underline">Darstellung der Einzelwerte als Zeitreihe</h4>
+            <p>Genauso wie Datensätze von unterschiedlichen Ländern zur Korrelation ausgewählt werden (per Klick auf einen Datenkreis aus Diagramm 1 und einen aus Diagramm 2) werden auch Datensätze zur Darstellung als Zeitreihe ausgewählt. Die entsprechende Darstellung befindet sich unterhalb des Zeitstrahls</p>
+            <p>Die blauen Werte inklusive der dazugehörenden linken Skala gehören zum Datensatz aus dem linken Kreisdiagramm. Die roten inklusive der rechten Skala zum Datensatz aus dem rechten. Die Datensätze sind oberhalb der Skalen auch textlich identifiziert.</p>
+        </div>
+        <div class="col-xs3 col-sm-3 col-md-3 col-lg-3"></div>
     </div>
-
+</body>
 </html>
+
