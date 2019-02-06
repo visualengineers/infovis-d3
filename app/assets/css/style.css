@@ -99,7 +99,7 @@ p#selectedValueForCountry1 {
 
 
 p#selectedValueForCountry2 {
-    text-indent: 750px;
+    float: right;
     color: red;
 }
 
